@@ -1,5 +1,3 @@
-import Music from "../icons/Music";
-
 const PodcastList = () => {
   const podcasts = [
     {
