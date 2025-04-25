@@ -1,4 +1,4 @@
-import Music from "../icons/music";
+import Music from "../icons/Music";
 
 const PodcastList = () => {
   const podcasts = [
@@ -17,56 +17,56 @@ const PodcastList = () => {
       url: "https://www.example.com/science-friday",
     },
     {
-      id: 1,
+      id: 3,
       title: "The Daily",
       host: "Michael Barbaro",
       category: "News",
       url: "https://www.example.com/daily",
     },
     {
-      id: 2,
+      id: 4,
       title: "Science Friday",
       host: "Ira Flatow",
       category: "Science",
       url: "https://www.example.com/science-friday",
     },
     {
-      id: 1,
+      id: 5,
       title: "The Daily",
       host: "Michael Barbaro",
       category: "News",
       url: "https://www.example.com/daily",
     },
     {
-      id: 2,
+      id: 6,
       title: "Science Friday",
       host: "Ira Flatow",
       category: "Science",
       url: "https://www.example.com/science-friday",
     },
     {
-      id: 1,
+      id: 7,
       title: "The Daily",
       host: "Michael Barbaro",
       category: "News",
       url: "https://www.example.com/daily",
     },
     {
-      id: 2,
+      id: 8,
       title: "Science Friday",
       host: "Ira Flatow",
       category: "Science",
       url: "https://www.example.com/science-friday",
     },
     {
-      id: 1,
+      id: 9,
       title: "The Daily",
       host: "Michael Barbaro",
       category: "News",
       url: "https://www.example.com/daily",
     },
     {
-      id: 2,
+      id: 10,
       title: "Science Friday",
       host: "Ira Flatow",
       category: "Science",

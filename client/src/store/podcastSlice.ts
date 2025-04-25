@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const getPodcast = createAsyncThunk(
+export const getPodcast = createAsyncThunk(
   "podcast/getPodcasts",
   async (_, thunkAPI) => {
     try {
@@ -20,7 +20,7 @@ const podcastSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getPodcast.pending, (state) => {
-        console.log(state);
+        console.log(state, "pending");
       })
       .addCase(getPodcast.fulfilled, (state, action) => {
         console.log(state, action);

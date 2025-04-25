@@ -1,8 +1,15 @@
-import AddPodcastForm from "./components/AddPodcastForm";
 import PodcastList from "./components/PodcastList";
-import PodcastDetails from "./components/PodcastDetails";
+import { useEffect } from "react";
+import { getPodcast } from "./store/podcastSlice";
+import { useAppDispatch } from "./store/hooks";
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getPodcast());
+  }, [dispatch]);
+
   return (
     <div className="px-4 py-8 space-y-8 bg-[#eadcc2]">
       <header className="text-center mb-8">
