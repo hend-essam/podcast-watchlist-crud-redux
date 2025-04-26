@@ -2,6 +2,7 @@ import PodcastList from "./components/PodcastList";
 import { useEffect } from "react";
 import { getPodcast } from "./store/podcastSlice";
 import { useAppDispatch } from "./store/hooks";
+import PodcastDetails from "./components/PodcastDetails";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -12,12 +13,13 @@ function App() {
 
   return (
     <div className="px-4 py-8 space-y-8 bg-[#eadcc2]">
-      {/* <header className="text-center mb-8">
+      <header className="text-center mb-8">
         <h1 className="text-4xl font-serif text-green-800 mb-2">PODCAST</h1>
         <p className="text-green-700">Keep track of your favorite podcasts</p>
-      </header> */}
+      </header>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <PodcastList />
+        <PodcastDetails />
       </div>
     </div>
   );

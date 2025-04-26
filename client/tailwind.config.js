@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}", // Include all files
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "notebook-paper": "linear-gradient(#ccc 1px, transparent 1px)",
+      },
+      backgroundSize: {
+        "notebook-paper": "100% 30px",
+      },
+    },
   },
   plugins: [],
 };

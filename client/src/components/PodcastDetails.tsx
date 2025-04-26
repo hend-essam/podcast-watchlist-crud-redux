@@ -4,29 +4,14 @@ const PodcastDetails = () => {
     host: "Michael Barbaro",
     category: "News",
     url: "https://www.example.com/daily",
-    description: "This is what you need to know today to navigate the news.",
+    description:
+      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quas quisquam nam placeat magnam ipsa cum doloremque aliquid recusandae saepe, impedit voluptas esse vitae mollitia in illo. Nisi consequatur quaerat officiis.",
     episodes: 1000,
     rating: 4.5,
   };
 
   return (
-    <div className="glass p-6 w-full max-w-2xl mx-auto">
-      {/* <button className="text-green-700 hover:text-green-800 mb-4 flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="m15 18-6-6 6-6" />
-        </svg>
-        Back to List
-      </button> */}
+    <div className="glass p-6 md:mt-[40px] w-full h-fit max-w-2xl mx-auto bg-[#ffffff6b] border-y-[4px] border-double border-[#d89615]">
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-serif text-green-800 mb-2">
