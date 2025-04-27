@@ -15,7 +15,7 @@ export const getPodcast = createAsyncThunk(
 
 const podcastSlice = createSlice({
   name: "podcast",
-  initialState: { podcast: null, loading: false },
+  initialState: { podcasts: [], loading: false },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -25,6 +25,7 @@ const podcastSlice = createSlice({
       })
       .addCase(getPodcast.fulfilled, (state, action) => {
         state.loading = false;
+        state.podcasts = action.payload;
         console.log(state, action);
       })
       .addCase(getPodcast.rejected, (state, action) => {

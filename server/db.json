@@ -1,3 +1,74 @@
 {
-  "podcasts": [{ "id": "1", "title": "podcast 1", "link": "" }]
+  "podcasts": [
+    {
+      "id": 1,
+      "title": "The Daily",
+      "host": "Michael Barbaro",
+      "category": "News",
+      "url": "https://www.example.com/daily"
+    },
+    {
+      "id": 2,
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday"
+    },
+    {
+      "id": 3,
+      "title": "The Daily",
+      "host": "Michael Barbaro",
+      "category": "News",
+      "url": "https://www.example.com/daily"
+    },
+    {
+      "id": 4,
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday"
+    },
+    {
+      "id": 5,
+      "title": "The Daily",
+      "host": "Michael Barbaro",
+      "category": "News",
+      "url": "https://www.example.com/daily"
+    },
+    {
+      "id": 6,
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday"
+    },
+    {
+      "id": 7,
+      "title": "The Daily",
+      "host": "Michael Barbaro",
+      "category": "News",
+      "url": "https://www.example.com/daily"
+    },
+    {
+      "id": 8,
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday"
+    },
+    {
+      "id": 9,
+      "title": "The Daily",
+      "host": "Michael Barbaro",
+      "category": "News",
+      "url": "https://www.example.com/daily"
+    },
+    {
+      "id": 10,
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday"
+    }
+  ]
 }

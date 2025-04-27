@@ -6,12 +6,7 @@ import { useSelector } from "react-redux";
 import PodcastDetails from "./components/PodcastDetails";
 import Header from "./components/Header";
 import Loading from "./components/Loading";
-
-interface PodcastState {
-  podcast: {
-    loading: boolean;
-  };
-}
+import { PodcastState } from "../types";
 
 function App() {
   const dispatch = useAppDispatch();
