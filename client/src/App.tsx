@@ -20,18 +20,10 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="bg-[#eadcc2] min-h-screen">
+    <div className="bg-[#eadcc2] min-h-screen xs:px-6 py-8 flex flex-col gap-8 justify-between">
       {loading ? <Loading /> : null}
-      <div className="px-4 py-8 space-y-8">
-        <Header />
-        {error ? (
-          <ErrorMessage error={error} />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <PodcastList />
-          </div>
-        )}
-      </div>
+      {/* <Header /> */}
+      {error ? <ErrorMessage error={error} /> : <PodcastList />}
     </div>
   );
 }
