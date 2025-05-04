@@ -1,21 +1,23 @@
-import ErrorIcon from "../icons/ErrorIcon";
-
 interface ErrorProps {
   error: string;
 }
 
 const ErrorMessage = ({ error }: ErrorProps) => {
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
-    <div className="max-w-xl mx-auto p-6 bg-red-50 border-l-8 border-red-500 rounded-lg shadow-lg">
-      <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 pt-0.5">
-          <ErrorIcon />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-red-800">{error}</h1>
-          <p className="mt-2 text-lg text-red-700">Please try again later.</p>
-        </div>
-      </div>
+    <div className="h-full flex flex-col items-center justify-center gap-4">
+      <h1 className="xxs:text-4xl xs:text-5xl font-bold text-red-800">
+        {error}
+      </h1>
+      <p className="text-xl text-red-700">Please try again later.</p>
+      <button
+        onClick={handleReload}
+        className="mt-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full transition"
+      >
+        Reload
+      </button>
     </div>
   );
 };
