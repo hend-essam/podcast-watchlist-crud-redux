@@ -13,7 +13,7 @@ const FilterSidebar = () => {
         aria-label={isOpen ? "Close filters" : "Open filters"}
         className={`fixed top-4 ${
           isOpen ? "left-[140px]" : "left-4"
-        } z-50 bg-[#016630] text-white p-2  cursor-pointer rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-[#d9941f]`}
+        } z-5 bg-[#016630] text-white p-2  cursor-pointer rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-[#d9941f]`}
       >
         <img
           src="./arrow.png"
@@ -24,7 +24,7 @@ const FilterSidebar = () => {
         />
       </button>
       <aside
-        className={`fixed top-0 left-0 h-full w-[200px] bg-white/40 backdrop-blur-md border-r-2 border-white/40 p-4 transition-transform duration-300 z-40 ${
+        className={`fixed top-0 left-0 h-full w-[200px] bg-white/40 backdrop-blur-md border-r-2 border-white/40 p-4 transition-transform duration-300 z-4 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

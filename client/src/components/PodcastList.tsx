@@ -5,11 +5,10 @@ import ErrorMessage from "./ErrorMessage";
 import { getPodcast, getSinglePodcast } from "../store/podcastSlice";
 import { useAppDispatch } from "../store/hooks";
 import { useEffect } from "react";
-import PodcastDetails from "./PodcastDetails";
 
 const PodcastList = () => {
   const dispatch = useAppDispatch();
-  const { podcasts, singlePodcast, error } = useSelector(
+  const { podcasts, error } = useSelector(
     (state: PodcastState) => state.podcast
   );
 
@@ -23,7 +22,7 @@ const PodcastList = () => {
   return (
     <div className="relative w-full max-h-[545px] pt-[70px] pb-[30px] max-w-4xl mx-auto">
       <div className="absolute h-full w-full top-0 aspect-[2/1] rounded-t-full bg-[url(greenFlowers.jpg)] bg-cover bg-center z-0" />
-      <div className="relative xxs:px-[20px] xs:px-[30px] sm:px-[65px] md:px-[70px] lg:px-[120px] max-h-fit z-10 flex flex-col items-center gap-4 justify-around">
+      <div className="relative xxs:px-[20px] xs:px-[30px] sm:px-[65px] md:px-[70px] lg:px-[120px] max-h-fit z-3 flex flex-col items-center gap-4 justify-around">
         <div className="relative sm:w-[60%] md:w-[75%] max-w-md">
           <input
             type="text"
@@ -63,7 +62,6 @@ const PodcastList = () => {
           )}
         </div>
       </div>
-      {singlePodcast && <PodcastDetails podcast={singlePodcast} />}
     </div>
   );
 };

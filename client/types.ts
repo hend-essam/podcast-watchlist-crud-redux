@@ -5,6 +5,7 @@ export interface Podcast {
   category: string;
   url: string;
   rating: number;
+  description?: string;
 }
 
 export interface PodcastState {

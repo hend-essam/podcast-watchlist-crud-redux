@@ -45,7 +45,11 @@ const initialState: PodcastState["podcast"] = {
 const podcastSlice = createSlice({
   name: "podcast",
   initialState,
-  reducers: {},
+  reducers: {
+    closeModal: (state) => {
+      state.singlePodcast = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getPodcast.pending, (state) => {
@@ -88,4 +92,5 @@ const podcastSlice = createSlice({
   },
 });
 
+export const { closeModal } = podcastSlice.actions;
 export default podcastSlice.reducer;

@@ -6,7 +6,8 @@
       "host": "Michael Barbaro",
       "category": "News",
       "url": "https://www.example.com/daily",
-      "rating": "4.5"
+      "rating": "4.5",
+      "description": "A daily news podcast that covers the biggest stories of our time."
     },
     {
       "id": 2,
@@ -38,7 +39,8 @@
       "host": "Michael Barbaro",
       "category": "News",
       "url": "https://www.example.com/daily",
-      "rating": "4.5"
+      "rating": "4.5",
+      "description": "A daily news podcast that covers the biggest stories of our time."
     },
     {
       "id": 6,
