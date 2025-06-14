@@ -3,9 +3,16 @@ type PodcastCardProps = {
   title: string;
   host: string;
   category: string;
+  onViewDetails: (id: string) => void;
 };
 
-const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
+const PodcastCard = ({
+  id,
+  title,
+  host,
+  category,
+  onViewDetails,
+}: PodcastCardProps) => {
   return (
     <div key={id} className="glass p-4 rounded-[20px] border border-white/30">
       <div className="flex justify-between items-center gap-3 transition-transform duration-100 hover:scale-[1.02]">
@@ -14,7 +21,10 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
           <p className="text-sm">Host: {host}</p>
           <p className="text-sm">Category: {category}</p>
         </div>
-        <button className="px-3 py-1 cursor-pointer">
+        <button
+          onClick={() => onViewDetails(id)}
+          className="px-3 py-1 cursor-pointer"
+        >
           <img src="./loupe.png" width="45px" alt="View podcast" />
         </button>
       </div>

@@ -5,70 +5,80 @@
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
-      "url": "https://www.example.com/daily"
+      "url": "https://www.example.com/daily",
+      "rating": "4.5"
     },
     {
       "id": 2,
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
-      "url": "https://www.example.com/science-friday"
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
     },
     {
       "id": 3,
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
-      "url": "https://www.example.com/daily"
+      "url": "https://www.example.com/daily",
+      "rating": "4.5"
     },
     {
       "id": 4,
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
-      "url": "https://www.example.com/science-friday"
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
     },
     {
       "id": 5,
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
-      "url": "https://www.example.com/daily"
+      "url": "https://www.example.com/daily",
+      "rating": "4.5"
     },
     {
       "id": 6,
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
-      "url": "https://www.example.com/science-friday"
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
     },
     {
       "id": 7,
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
-      "url": "https://www.example.com/daily"
+      "url": "https://www.example.com/daily",
+      "rating": "4.5"
     },
     {
       "id": 8,
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
-      "url": "https://www.example.com/science-friday"
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
     },
     {
       "id": 9,
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
-      "url": "https://www.example.com/daily"
+      "url": "https://www.example.com/daily",
+      "rating": "4.5"
     },
     {
       "id": 10,
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
-      "url": "https://www.example.com/science-friday"
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
     }
   ]
 }
