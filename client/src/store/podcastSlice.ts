@@ -45,16 +45,12 @@ const initialState: PodcastState["podcast"] = {
 const podcastSlice = createSlice({
   name: "podcast",
   initialState,
-  reducers: {
-    closeModal: (state) => {
-      state.singlePodcast = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getPodcast.pending, (state) => {
         state.loading = true;
-        console.log(state, "pending");
+        //console.log(state, "pending");
       })
       .addCase(
         getPodcast.fulfilled,
@@ -71,7 +67,7 @@ const podcastSlice = createSlice({
       })
       .addCase(getSinglePodcast.pending, (state) => {
         state.loading = true;
-        console.log(state, "pending");
+        //console.log(state, "pending");
       })
       .addCase(
         getSinglePodcast.fulfilled,
@@ -92,5 +88,4 @@ const podcastSlice = createSlice({
   },
 });
 
-export const { closeModal } = podcastSlice.actions;
 export default podcastSlice.reducer;

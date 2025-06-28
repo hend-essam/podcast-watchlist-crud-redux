@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import podcast from "./podcastSlice";
+import podcastSlice from "./podcastSlice";
+import modalSlice from "./modalSlice";
 
 const store = configureStore({
   reducer: {
-    podcast,
+    podcast: podcastSlice,
+    modal: modalSlice,
   },
 });
 

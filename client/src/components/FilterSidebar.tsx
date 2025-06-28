@@ -1,8 +1,12 @@
 import { useState } from "react";
+import Add from "../icons/Add";
+import { useAppDispatch } from "../store/hooks";
+import { openAddPodcast } from "../store/modalSlice";
 
 const filterOptions = ["Science 1", "Science 2", "Science 3"];
 
 const FilterSidebar = () => {
+  const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -43,6 +47,12 @@ const FilterSidebar = () => {
             </label>
           ))}
         </div>
+        <button
+          onClick={() => dispatch(openAddPodcast())}
+          className="mt-4 flex items-center gap-2 text-green-800 hover:text-green-700"
+        >
+          <Add /> Add Podcast
+        </button>
       </aside>
     </div>
   );
