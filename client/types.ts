@@ -6,6 +6,8 @@ export interface Podcast {
   url: string;
   rating: number;
   description?: string;
+  pin: string;
+  createdAt: string;
 }
 
 export interface PodcastState {
@@ -15,4 +17,11 @@ export interface PodcastState {
     podcasts: Podcast[];
     error: string | null;
   };
+}
+
+export interface PodcastCardProps {
+  id: number;
+  title: string;
+  host: string;
+  category: string;
 }

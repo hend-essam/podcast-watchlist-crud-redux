@@ -2,7 +2,7 @@ import { PodcastState } from "../../types";
 import { useSelector } from "react-redux";
 import PodcastCard from "./PodcastCard";
 import ErrorMessage from "./ErrorMessage";
-import { getPodcast, getSinglePodcast } from "../store/podcastSlice";
+import { getPodcast } from "../store/podcastSlice";
 import { useAppDispatch } from "../store/hooks";
 import { useEffect } from "react";
 
@@ -16,9 +16,6 @@ const PodcastList = () => {
     dispatch(getPodcast());
   }, [dispatch]);
 
-  const handleViewDetails = (id: string) => {
-    dispatch(getSinglePodcast(Number(id)));
-  };
   return (
     <div className="relative w-full max-h-[545px] pt-[70px] pb-[30px] max-w-4xl mx-auto">
       <div className="absolute h-full w-full top-0 aspect-[2/1] rounded-t-full bg-[url(greenFlowers.jpg)] bg-cover bg-center z-0" />
@@ -51,7 +48,6 @@ const PodcastList = () => {
                       title={podcast.title}
                       host={podcast.host}
                       category={podcast.category}
-                      onViewDetails={handleViewDetails}
                     />
                   ))}
                 </div>
