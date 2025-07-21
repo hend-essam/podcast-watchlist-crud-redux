@@ -1,7 +1,24 @@
 {
   "podcasts": [
     {
-      "id": 1,
+      "id": "1",
+      "title": "The Dailyyyyyyy",
+      "host": "Michael Barbaro",
+      "category": "News",
+      "url": "https://www.example.com/daily",
+      "rating": 5,
+      "description": "A daily news podcast that covers the biggest stories of our time."
+    },
+    {
+      "id": "2",
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
+    },
+    {
+      "id": "3",
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
@@ -10,7 +27,7 @@
       "description": "A daily news podcast that covers the biggest stories of our time."
     },
     {
-      "id": 2,
+      "id": "4",
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
@@ -18,15 +35,16 @@
       "rating": "4.5"
     },
     {
-      "id": 3,
+      "id": "5",
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
-      "url": "https://www.example.com/daily",
-      "rating": "4.5"
+      "url": "https://www.example.com/dailyyyy",
+      "rating": "4.5",
+      "description": "A daily news podcast that covers the biggest stories of our time."
     },
     {
-      "id": 4,
+      "id": "6",
       "title": "Science Friday",
       "host": "Ira Flatow",
       "category": "Science",
@@ -34,7 +52,15 @@
       "rating": "4.5"
     },
     {
-      "id": 5,
+      "id": "8",
+      "title": "Science Friday",
+      "host": "Ira Flatow",
+      "category": "Science",
+      "url": "https://www.example.com/science-friday",
+      "rating": "4.5"
+    },
+    {
+      "id": "9",
       "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
@@ -43,44 +69,48 @@
       "description": "A daily news podcast that covers the biggest stories of our time."
     },
     {
-      "id": 6,
-      "title": "Science Friday",
-      "host": "Ira Flatow",
-      "category": "Science",
-      "url": "https://www.example.com/science-friday",
-      "rating": "4.5"
+      "title": "swdfgh",
+      "host": "dfgy",
+      "url": "http://m-h.group",
+      "category": "dsafgh",
+      "pin": "789",
+      "rating": 3,
+      "description": "sadf",
+      "createdAt": "2025-07-19T23:10:11.315Z",
+      "id": "PAhixJb"
     },
     {
-      "id": 7,
-      "title": "The Daily",
-      "host": "Michael Barbaro",
-      "category": "News",
+      "title": "ttttttttt",
+      "host": "hend",
       "url": "https://www.example.com/daily",
-      "rating": "4.5"
+      "category": "Scienceeee",
+      "pin": "1234",
+      "rating": 5,
+      "description": "fcghbjkmll,",
+      "createdAt": "2025-07-20T22:58:39.026Z",
+      "id": "wMlw73p"
     },
     {
-      "id": 8,
-      "title": "Science Friday",
-      "host": "Ira Flatow",
-      "category": "Science",
-      "url": "https://www.example.com/science-friday",
-      "rating": "4.5"
-    },
-    {
-      "id": 9,
-      "title": "The Daily",
-      "host": "Michael Barbaro",
-      "category": "News",
+      "title": "serdfghjk",
+      "host": "hendddddd",
       "url": "https://www.example.com/daily",
-      "rating": "4.5"
+      "category": "Newsssssssss",
+      "pin": "9989",
+      "rating": 5,
+      "description": "sdrtfgyhujik",
+      "createdAt": "2025-07-21T01:34:48.605Z",
+      "id": "oVTW1Jh"
     },
     {
-      "id": 10,
-      "title": "Science Friday",
-      "host": "Ira Flatow",
-      "category": "Science",
-      "url": "https://www.example.com/science-friday",
-      "rating": "4.5"
+      "title": "zxcvb",
+      "host": "dsfg",
+      "url": "http://m-h.group",
+      "category": "News",
+      "pin": "1009",
+      "rating": 5,
+      "description": "qwertyuio",
+      "createdAt": "2025-07-21T01:37:35.793Z",
+      "id": "rzoZH3y"
     }
   ]
 }

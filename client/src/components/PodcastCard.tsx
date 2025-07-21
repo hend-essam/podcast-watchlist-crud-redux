@@ -14,7 +14,7 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
 
   const handleViewDetails = async () => {
     try {
-      const result = await dispatch(getSinglePodcast(Number(id)));
+      const result = await dispatch(getSinglePodcast(id));
       if (getSinglePodcast.fulfilled.match(result)) {
         dispatch(openPodcastDetails(result.payload));
       }

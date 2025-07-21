@@ -1,35 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Add from "../icons/Add";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { openAddPodcast } from "../store/modalSlice";
 
 const filterOptions = ["Science 1", "Science 2", "Science 3"];
 
 const FilterSidebar = () => {
   const dispatch = useAppDispatch();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen } = useAppSelector((state) => state.modal);
+  const [isOpenSideBar, setIsOpenSideBar] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpenSideBar(false);
+    }
+  }, [isOpen]);
 
   return (
     <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        aria-label={isOpen ? "Close filters" : "Open filters"}
+        onClick={() => setIsOpenSideBar(!isOpenSideBar)}
+        aria-expanded={isOpenSideBar}
+        aria-label={isOpenSideBar ? "Close filters" : "Open filters"}
         className={`fixed top-4 ${
-          isOpen ? "left-[140px]" : "left-4"
+          isOpenSideBar ? "left-[140px]" : "left-4"
         } z-5 bg-[#016630] text-white p-2  cursor-pointer rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-[#d9941f]`}
       >
         <img
           src="./arrow.png"
           alt="filter arrow"
           className={`w-6 transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
+            isOpenSideBar ? "rotate-180" : ""
           }`}
         />
       </button>
       <aside
         className={`fixed top-0 left-0 h-full w-[200px] bg-white/40 backdrop-blur-md border-r-2 border-white/40 p-4 transition-transform duration-300 z-4 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpenSideBar ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <h2 className="text-2xl font-semibold text-[#016630] mb-6">Filter</h2>

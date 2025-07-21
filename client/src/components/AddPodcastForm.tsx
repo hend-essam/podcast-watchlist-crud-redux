@@ -62,11 +62,14 @@ const AddPodcastForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4  max-h-[70vh] overflow-y-auto pr-2"
+    >
       {["title", "host", "url", "category", "pin"].map((field) => (
         <div key={field} className="space-y-2">
           <input
-            type={field === "url" ? "url" : "text"}
+            type={field === "url" ? "url" : field === "pin" ? "number" : "text"}
             name={field}
             placeholder={
               field === "url"
@@ -95,7 +98,7 @@ const AddPodcastForm = () => {
         />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex xxs:flex-col sm:flex-row items-center gap-4">
         <label className="block font-medium">Rating</label>
         <StarRating value={formData.rating} onChange={handleRatingChange} />
       </div>

@@ -1,5 +1,5 @@
 export interface Podcast {
-  id: number;
+  id: string;
   title: string;
   host: string;
   category: string;
@@ -7,20 +7,23 @@ export interface Podcast {
   rating: number;
   description?: string;
   pin: string;
-  createdAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface PodcastState {
   podcast: {
+    podcasts: Podcast[];
     singlePodcast: Podcast | null;
     loading: boolean;
-    podcasts: Podcast[];
     error: string | null;
+    lastUpdated: string | null;
+    status: "idle" | "loading" | "succeeded" | "failed";
   };
 }
 
 export interface PodcastCardProps {
-  id: number;
+  id: string;
   title: string;
   host: string;
   category: string;

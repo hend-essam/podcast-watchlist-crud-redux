@@ -8,7 +8,7 @@ interface StarProps {
 const Star = ({
   fill = "none",
   stroke = "#F9B618",
-  strokeWidth = 4,
+  strokeWidth = 10,
   className = "",
 }: StarProps) => {
   return (

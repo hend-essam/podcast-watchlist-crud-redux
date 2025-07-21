@@ -2,10 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Podcast, PodcastState } from "../../types";
 
-const handleApiError = (error: any, rejectWithValue: Function) => {
-  const message =
-    error.response?.data?.message || error.message || "Request failed";
-  return rejectWithValue(message);
+const handleApiError = (error: unknown, rejectWithValue: Function) => {
+  if (error instanceof Error) {
+    return rejectWithValue(error.message);
+  }
+  return rejectWithValue("Request failed");
 };
 
 export const getPodcast = createAsyncThunk(
@@ -23,7 +24,7 @@ export const getPodcast = createAsyncThunk(
 
 export const getSinglePodcast = createAsyncThunk(
   "podcast/getSinglePodcast",
-  async (id: number, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const res = await fetch(`http://localhost:3005/podcasts/${id}`);
       if (!res.ok) throw new Error(await res.text());
@@ -34,14 +35,23 @@ export const getSinglePodcast = createAsyncThunk(
   }
 );
 
-export const deletePodcast = createAsyncThunk(
+export const deletePodcastByPin = createAsyncThunk(
   "podcast/deletePodcast",
-  async (id: number, { rejectWithValue }) => {
+  async ({ id, pin }: { id: string; pin: string }, { rejectWithValue }) => {
     try {
       const res = await fetch(`http://localhost:3005/podcasts/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pin }),
       });
-      if (!res.ok) throw new Error("Delete failed");
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to delete");
+      }
+
       return id;
     } catch (error) {
       return handleApiError(error, rejectWithValue);
@@ -75,19 +85,29 @@ export const createPodcast = createAsyncThunk(
 export const updatePodcast = createAsyncThunk(
   "podcast/updatePodcast",
   async (
-    { id, data, pin }: { id: number; data: Partial<Podcast>; pin: string },
+    { id, data, pin }: { id: string; data: Partial<Podcast>; pin: string },
     { rejectWithValue }
   ) => {
     try {
+      const payload = {
+        ...data,
+        pin,
+      };
+
       const res = await fetch(`http://localhost:3005/podcasts/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           "X-PIN": pin,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(await res.text());
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to update podcast");
+      }
+
       return (await res.json()) as Podcast;
     } catch (error) {
       return handleApiError(error, rejectWithValue);
@@ -100,6 +120,8 @@ const initialState: PodcastState["podcast"] = {
   singlePodcast: null,
   loading: false,
   error: null,
+  lastUpdated: null,
+  status: "loading",
 };
 
 const podcastSlice = createSlice({
@@ -150,8 +172,8 @@ const podcastSlice = createSlice({
         }
       )
       .addCase(
-        deletePodcast.fulfilled,
-        (state, action: PayloadAction<number>) => {
+        deletePodcastByPin.fulfilled,
+        (state, action: PayloadAction<string>) => {
           state.loading = false;
           state.podcasts = state.podcasts.filter(
             (p) => p.id !== action.payload
@@ -162,21 +184,17 @@ const podcastSlice = createSlice({
         }
       )
       .addMatcher(
-        (action) =>
-          action.type.startsWith("podcast/") &&
-          action.type.endsWith("/pending"),
+        (action) => action.type.endsWith("/pending"),
         (state) => {
           state.loading = true;
           state.error = null;
         }
       )
       .addMatcher(
-        (action) =>
-          action.type.startsWith("podcast/") &&
-          action.type.endsWith("/rejected"),
-        (state, action: PayloadAction<string>) => {
+        (action) => action.type.endsWith("/rejected"),
+        (state, action: PayloadAction<unknown>) => {
           state.loading = false;
-          state.error = action.payload;
+          state.error = action.payload as string;
         }
       );
   },
