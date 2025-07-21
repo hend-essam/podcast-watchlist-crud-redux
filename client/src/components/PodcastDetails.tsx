@@ -49,9 +49,11 @@ const PodcastDetails = () => {
       await dispatch(
         updatePodcast({ id: podcast.id, data: editData, pin })
       ).unwrap();
-      setOpenEdit(false);
       setError("");
-      setTimeout(() => dispatch(closeModal()), 500);
+      setTimeout(() => {
+        dispatch(closeModal());
+        setOpenEdit(false);
+      }, 500);
     } catch (err) {
       setError("Invalid PIN or update failed");
     }

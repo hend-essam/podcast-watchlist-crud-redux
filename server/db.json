@@ -2,12 +2,13 @@
   "podcasts": [
     {
       "id": "1",
-      "title": "The Dailyyyyyyy",
+      "title": "The Daily",
       "host": "Michael Barbaro",
       "category": "News",
       "url": "https://www.example.com/daily",
       "rating": 5,
-      "description": "A daily news podcast that covers the biggest stories of our time."
+      "description": "A daily news podcast that covers the biggest stories of our time.",
+      "pin": "1234"
     },
     {
       "id": "2",
@@ -73,44 +74,11 @@
       "host": "dfgy",
       "url": "http://m-h.group",
       "category": "dsafgh",
-      "pin": "789",
+      "pin": "1234",
       "rating": 3,
       "description": "sadf",
       "createdAt": "2025-07-19T23:10:11.315Z",
       "id": "PAhixJb"
-    },
-    {
-      "title": "ttttttttt",
-      "host": "hend",
-      "url": "https://www.example.com/daily",
-      "category": "Scienceeee",
-      "pin": "1234",
-      "rating": 5,
-      "description": "fcghbjkmll,",
-      "createdAt": "2025-07-20T22:58:39.026Z",
-      "id": "wMlw73p"
-    },
-    {
-      "title": "serdfghjk",
-      "host": "hendddddd",
-      "url": "https://www.example.com/daily",
-      "category": "Newsssssssss",
-      "pin": "9989",
-      "rating": 5,
-      "description": "sdrtfgyhujik",
-      "createdAt": "2025-07-21T01:34:48.605Z",
-      "id": "oVTW1Jh"
-    },
-    {
-      "title": "zxcvb",
-      "host": "dsfg",
-      "url": "http://m-h.group",
-      "category": "News",
-      "pin": "1009",
-      "rating": 5,
-      "description": "qwertyuio",
-      "createdAt": "2025-07-21T01:37:35.793Z",
-      "id": "rzoZH3y"
     }
   ]
 }
