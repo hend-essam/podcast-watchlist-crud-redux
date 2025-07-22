@@ -58,7 +58,10 @@
       "host": "Ira Flatow",
       "category": "Science",
       "url": "https://www.example.com/science-friday",
-      "rating": "4.5"
+      "rating": 1,
+      "description": "",
+      "updatedAt": "2025-07-22T01:49:15.076Z",
+      "pin": "1234"
     },
     {
       "id": "9",
@@ -71,14 +74,27 @@
     },
     {
       "title": "swdfgh",
-      "host": "dfgy",
+      "host": "hhh",
       "url": "http://m-h.group",
       "category": "dsafgh",
       "pin": "1234",
-      "rating": 3,
+      "rating": 5,
       "description": "sadf",
       "createdAt": "2025-07-19T23:10:11.315Z",
-      "id": "PAhixJb"
+      "id": "PAhixJb",
+      "updatedAt": "2025-07-22T01:48:40.201Z"
+    },
+    {
+      "title": "hgbfdsx",
+      "host": "fdx",
+      "url": "http://m-h.group",
+      "category": "hendddddddddd",
+      "pin": "1234",
+      "rating": 1,
+      "description": "xdfcvghbjnk",
+      "createdAt": "2025-07-22T01:23:30.362Z",
+      "id": "fUVSmX7",
+      "updatedAt": "2025-07-22T01:47:08.631Z"
     }
   ]
 }

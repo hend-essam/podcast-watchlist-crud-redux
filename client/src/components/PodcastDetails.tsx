@@ -21,6 +21,7 @@ const PodcastDetails = () => {
     rating: podcast?.rating || 0,
     url: podcast?.url || "",
     description: podcast?.description || "",
+    updatedAt: new Date().toISOString(),
   });
 
   if (!podcast) return null;

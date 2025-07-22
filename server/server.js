@@ -122,6 +122,10 @@ server.use((req, res, next) => {
           });
       }
 
+      if (pin === ADMIN_PIN) {
+        delete req.body.pin;
+      }
+
       const updateFields = Object.keys(req.body).filter((key) => key !== "pin");
       if (updateFields.length === 0) {
         return res.status(400).json({
