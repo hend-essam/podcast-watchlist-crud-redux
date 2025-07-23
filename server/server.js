@@ -49,6 +49,24 @@ server.use((req, res, next) => {
       return { valid: true };
     };
 
+    if (req.method === "GET" && (req.query.q || req.query.search)) {
+      const searchTerm = (req.query.q || req.query.search).toLowerCase();
+      const db = router.db.getState();
+
+      const results = db.podcasts.filter((podcast) => {
+        return (
+          podcast.title?.toString().toLowerCase().includes(searchTerm) ||
+          podcast.host?.toString().toLowerCase().includes(searchTerm) ||
+          podcast.description?.toString().toLowerCase().includes(searchTerm)
+        );
+      });
+
+      console.log("Search term:", searchTerm);
+      console.log("Results:", results);
+
+      return res.json(results);
+    }
+
     if (req.method === "DELETE") {
       const { pin } = req.body;
       const id = req.url.split("/").pop();

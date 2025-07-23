@@ -119,17 +119,20 @@ const PodcastDetails = () => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-green-700 max-h-[70vh] overflow-y-auto pr-2">
         <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
+          <div className="break-words">
+            {" "}
             <p className="font-medium">Category</p>
             <p>{podcast.category}</p>
           </div>
 
-          <div>
+          <div className="break-words">
+            {" "}
             <p className="font-medium">Rating</p>
             {renderStars(podcast.rating)}
           </div>
 
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-2 break-words">
+            {" "}
             <p className="font-medium">URL</p>
             <a
               href={podcast.url}
@@ -141,7 +144,8 @@ const PodcastDetails = () => {
             </a>
           </div>
 
-          <div className="sm:col-span-2">
+          <div className="sm:col-span-2 break-words">
+            {" "}
             <p className="font-medium">Description</p>
             <p className={`${!podcast.description && "text-gray-600"}`}>
               {podcast.description || "No description"}
@@ -173,11 +177,12 @@ const PodcastDetails = () => {
         </div>
 
         {openEdit && (
-          <div className="md:col-span-2 flex flex-col gap-4 p-4 bg-[#dac8a5] rounded-xl">
+          <div className="md:col-span-2 flex flex-col gap-4 p-4 bg-[#dac8a5] rounded-xl break-words">
+            {" "}
             <h4 className="font-medium text-green-700">Edit Podcast</h4>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div className="break-words">
+                {" "}
                 <label className="block text-sm font-medium">Title</label>
                 <input
                   type="text"
@@ -188,7 +193,8 @@ const PodcastDetails = () => {
                 />
               </div>
 
-              <div>
+              <div className="break-words">
+                {" "}
                 <label className="block text-sm font-medium">Host</label>
                 <input
                   type="text"
@@ -199,7 +205,8 @@ const PodcastDetails = () => {
                 />
               </div>
 
-              <div>
+              <div className="break-words">
+                {" "}
                 <label className="block text-sm font-medium">Category</label>
                 <input
                   type="text"
@@ -210,12 +217,14 @@ const PodcastDetails = () => {
                 />
               </div>
 
-              <div>
+              <div className="break-words">
+                {" "}
                 <label className="block text-sm font-medium">Rating</label>
                 {renderRatingInput()}
               </div>
 
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 break-words">
+                {" "}
                 <label className="block text-sm font-medium">URL</label>
                 <input
                   type="url"
@@ -226,7 +235,8 @@ const PodcastDetails = () => {
                 />
               </div>
 
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 break-words">
+                {" "}
                 <label className="block text-sm font-medium">Description</label>
                 <textarea
                   name="description"
@@ -237,9 +247,7 @@ const PodcastDetails = () => {
                 />
               </div>
             </div>
-
             {error && <p className="text-red-500 text-sm">{error}</p>}
-
             <div className="flex flex-col sm:flex-row gap-4">
               <input
                 type="password"
@@ -262,7 +270,8 @@ const PodcastDetails = () => {
         )}
 
         {openDelete && (
-          <div className="md:col-span-2 flex flex-col gap-4 p-4 bg-[#dac8a5] rounded-xl">
+          <div className="md:col-span-2 flex flex-col gap-4 p-4 bg-[#dac8a5] rounded-xl break-words">
+            {" "}
             <div className="p-3 bg-red-100 border-l-4 border-red-600 text-red-700">
               <p className="font-medium">
                 Warning: This action cannot be undone
@@ -271,9 +280,7 @@ const PodcastDetails = () => {
                 All podcast data will be permanently deleted.
               </p>
             </div>
-
             {error && <p className="text-red-500 text-sm">{error}</p>}
-
             <div className="flex flex-col sm:flex-row gap-4">
               <input
                 type="password"

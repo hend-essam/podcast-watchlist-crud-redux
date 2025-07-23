@@ -19,6 +19,7 @@ export interface PodcastState {
     error: string | null;
     lastUpdated: string | null;
     status: "idle" | "loading" | "succeeded" | "failed";
+    searchResults: Podcast[];
   };
 }
 

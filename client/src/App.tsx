@@ -3,6 +3,7 @@ import Loading from "./components/Loading";
 import FilterSidebar from "./components/FilterSidebar";
 import ModalRoot from "./components/ModalRoot";
 import { useAppSelector } from "./store/hooks";
+import AddButton from "./components/AddButton";
 
 function App() {
   const { loading } = useAppSelector((state) => state.podcast);
@@ -10,10 +11,9 @@ function App() {
   return (
     <div className="bg-[#eadcc2] min-h-screen xs:px-6 py-8">
       {loading && <Loading />}
-      <div className="flex justify-between">
-        <FilterSidebar />
-        <PodcastList />
-      </div>
+      <AddButton />
+      <FilterSidebar />
+      <PodcastList />
       <ModalRoot />
     </div>
   );

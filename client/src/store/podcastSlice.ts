@@ -115,6 +115,22 @@ export const updatePodcast = createAsyncThunk(
   }
 );
 
+export const searchPodcasts = createAsyncThunk(
+  "podcast/searchPodcasts",
+  async (searchTerm: string, { rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3005/podcasts?q=${encodeURIComponent(searchTerm)}`
+      );
+
+      if (!res.ok) throw new Error("Search failed");
+      return (await res.json()) as Podcast[];
+    } catch (error) {
+      return handleApiError(error, rejectWithValue);
+    }
+  }
+);
+
 const initialState: PodcastState["podcast"] = {
   podcasts: [],
   singlePodcast: null,
@@ -122,6 +138,7 @@ const initialState: PodcastState["podcast"] = {
   error: null,
   lastUpdated: null,
   status: "loading",
+  searchResults: [],
 };
 
 const podcastSlice = createSlice({
@@ -183,6 +200,21 @@ const podcastSlice = createSlice({
           }
         }
       )
+      .addCase(searchPodcasts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        searchPodcasts.fulfilled,
+        (state, action: PayloadAction<Podcast[]>) => {
+          state.loading = false;
+          state.searchResults = action.payload;
+        }
+      )
+      .addCase(searchPodcasts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {

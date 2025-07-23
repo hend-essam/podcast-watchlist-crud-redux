@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import Add from "../icons/Add";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { openAddPodcast } from "../store/modalSlice";
+import { useAppSelector } from "../store/hooks";
 
 const filterOptions = ["Science 1", "Science 2", "Science 3"];
 
 const FilterSidebar = () => {
-  const dispatch = useAppDispatch();
   const { isOpen } = useAppSelector((state) => state.modal);
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
 
@@ -24,7 +21,7 @@ const FilterSidebar = () => {
         aria-label={isOpenSideBar ? "Close filters" : "Open filters"}
         className={`fixed top-4 ${
           isOpenSideBar ? "left-[140px]" : "left-4"
-        } z-5 bg-[#016630] text-white p-2  cursor-pointer rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-[#d9941f]`}
+        } z-5 bg-[#016630] text-white p-2  cursor-pointer rounded-full shadow-md focus:ring-2 focus:ring-[#d9941f]`}
       >
         <img
           src="./arrow.png"
@@ -54,12 +51,6 @@ const FilterSidebar = () => {
             </label>
           ))}
         </div>
-        <button
-          onClick={() => dispatch(openAddPodcast())}
-          className="mt-4 flex items-center gap-2 text-green-800 hover:text-green-700"
-        >
-          <Add /> Add Podcast
-        </button>
       </aside>
     </div>
   );

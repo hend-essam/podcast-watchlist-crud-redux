@@ -26,14 +26,14 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
   return (
     <div className="glass p-4 rounded-[20px] border border-white/30">
       <div className="flex justify-between items-center gap-3 transition-transform duration-100 hover:scale-[1.02]">
-        <div>
-          <h3 className="text-lg font-medium">{title}</h3>
-          <p className="text-sm">Host: {host}</p>
-          <p className="text-sm">Category: {category}</p>
+        <div className="min-w-0">
+          <h3 className="text-lg font-medium truncate">{title}</h3>
+          <p className="text-sm truncate">Host: {host}</p>
+          <p className="text-sm truncate">Category: {category}</p>
         </div>
         <button
           onClick={handleViewDetails}
-          className="px-3 py-1 cursor-pointer"
+          className="px-3 py-1 cursor-pointer flex-shrink-0"
           aria-label={`View details for ${title}`}
         >
           <img
