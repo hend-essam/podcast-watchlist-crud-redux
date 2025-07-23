@@ -6,6 +6,7 @@ import { useState } from "react";
 import Star from "../icons/Star";
 import { deletePodcastByPin, updatePodcast } from "../store/podcastSlice";
 import { Podcast } from "../../types";
+import { categories } from "../data";
 
 const PodcastDetails = () => {
   const dispatch = useAppDispatch();
@@ -208,13 +209,23 @@ const PodcastDetails = () => {
               <div className="break-words">
                 {" "}
                 <label className="block text-sm font-medium">Category</label>
-                <input
-                  type="text"
+                <select
                   name="category"
                   value={editData.category}
-                  onChange={handleEditChange}
+                  onChange={(e) =>
+                    setEditData((prev) => ({
+                      ...prev,
+                      category: e.target.value,
+                    }))
+                  }
                   className="w-full rounded-md border p-2"
-                />
+                >
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="break-words">

@@ -22,18 +22,21 @@
       "id": "3",
       "title": "The Daily",
       "host": "Michael Barbaro",
-      "category": "News",
+      "category": "Business & Finance",
       "url": "https://www.example.com/daily",
       "rating": "4.5",
-      "description": "A daily news podcast that covers the biggest stories of our time."
+      "description": "A daily news podcast that covers the biggest stories of our time.",
+      "updatedAt": "2025-07-23T21:00:51.553Z"
     },
     {
       "id": "4",
       "title": "Science Friday",
       "host": "Ira Flatow",
-      "category": "Science",
+      "category": "History",
       "url": "https://www.example.com/science-friday",
-      "rating": "4.5"
+      "rating": "4.5",
+      "description": "",
+      "updatedAt": "2025-07-23T20:54:26.888Z"
     },
     {
       "id": "5",
@@ -95,6 +98,29 @@
       "createdAt": "2025-07-22T01:23:30.362Z",
       "id": "fUVSmX7",
       "updatedAt": "2025-07-23T02:06:35.294Z"
+    },
+    {
+      "title": "xcvbnm ,",
+      "host": "sdfghjk",
+      "url": "https://www.example.com/daily",
+      "category": "Science",
+      "pin": "101",
+      "rating": 3,
+      "description": "sdfghjk",
+      "createdAt": "2025-07-23T22:47:29.822Z",
+      "id": "lPy1kIF",
+      "updatedAt": "2025-07-23T22:50:13.617Z"
+    },
+    {
+      "title": "sdfgh",
+      "host": "dfgbnhmj",
+      "url": "https://www.example.com/science-friday",
+      "category": "Science",
+      "pin": "101",
+      "rating": 0,
+      "description": "sdfgbh",
+      "createdAt": "2025-07-23T22:53:33.584Z",
+      "id": "LC7TWly"
     }
   ]
 }

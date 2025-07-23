@@ -4,6 +4,7 @@ import { closeModal } from "../store/modalSlice";
 import { createPodcast } from "../store/podcastSlice";
 import Add from "../icons/Add";
 import StarRating from "./StarRating";
+import { categories } from "../data";
 
 const AddPodcastForm = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,9 @@ const AddPodcastForm = () => {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -64,18 +67,16 @@ const AddPodcastForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4  max-h-[70vh] overflow-y-auto pr-2"
+      className="space-y-4 max-h-[70vh] overflow-y-auto pr-2"
     >
-      {["title", "host", "url", "category", "pin"].map((field) => (
+      {["title", "host", "url"].map((field) => (
         <div key={field} className="space-y-2">
           <input
-            type={field === "url" ? "url" : field === "pin" ? "number" : "text"}
+            type={field === "url" ? "url" : "text"}
             name={field}
             placeholder={
               field === "url"
                 ? "Podcast URL"
-                : field === "pin"
-                ? "PIN"
                 : `${field.charAt(0).toUpperCase() + field.slice(1)}${
                     field === "host" ? " Name" : ""
                   }`
@@ -87,6 +88,25 @@ const AddPodcastForm = () => {
           />
         </div>
       ))}
+
+      <div className="space-y-2">
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="flex h-10 w-full rounded-md border px-3 py-2 glass"
+          required
+        >
+          <option value="" disabled hidden>
+            Select a category
+          </option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="space-y-2">
         <textarea
@@ -103,6 +123,17 @@ const AddPodcastForm = () => {
         <StarRating value={formData.rating} onChange={handleRatingChange} />
       </div>
 
+      <div className="space-y-2">
+        <input
+          type="number"
+          name="pin"
+          placeholder="PIN"
+          value={formData.pin}
+          onChange={handleChange}
+          className="flex h-10 w-full rounded-md border px-3 py-2 glass"
+          required
+        />
+      </div>
       <button
         type="submit"
         className="w-full bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md flex items-center justify-center gap-2"
