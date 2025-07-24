@@ -66,7 +66,7 @@ const PodcastList = () => {
             isLoading={loading}
           />
         </div>
-        {activeFilters.length > 0 && (
+        {/* {activeFilters.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {activeFilters.map((filter) => (
               <span
@@ -100,7 +100,7 @@ const PodcastList = () => {
               </button>
             )}
           </div>
-        )}
+        )} */}
 
         <div className="w-full h-[385px] max-w-4xl backdrop-blur-lg bg-white/30 border-2 border-white/40 shadow-lg rounded-[40px] p-6 overflow-hidden">
           {error ? (
