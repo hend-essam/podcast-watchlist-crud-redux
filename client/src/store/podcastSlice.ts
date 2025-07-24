@@ -131,6 +131,27 @@ export const searchPodcasts = createAsyncThunk(
   }
 );
 
+export const filterPodcastsByCategory = createAsyncThunk(
+  "podcast/filterByCategory",
+  async (categories: string[], { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { podcast: PodcastState["podcast"] };
+      const allPodcasts = state.podcast.podcasts;
+
+      if (categories.length === 0) {
+        return allPodcasts;
+      }
+
+      const filtered = allPodcasts.filter((podcast) =>
+        categories.includes(podcast.category)
+      );
+      return filtered;
+    } catch (error) {
+      return handleApiError(error, rejectWithValue);
+    }
+  }
+);
+
 const initialState: PodcastState["podcast"] = {
   podcasts: [],
   singlePodcast: null,
@@ -139,6 +160,8 @@ const initialState: PodcastState["podcast"] = {
   lastUpdated: null,
   status: "loading",
   searchResults: [],
+  filteredPodcasts: [],
+  activeFilters: [],
 };
 
 const podcastSlice = createSlice({
@@ -148,9 +171,15 @@ const podcastSlice = createSlice({
     resetPodcasts: (state) => {
       state.podcasts = [];
       state.singlePodcast = null;
+      state.filteredPodcasts = [];
+      state.activeFilters = [];
     },
     resetError: (state) => {
       state.error = null;
+    },
+    clearFilters: (state) => {
+      state.filteredPodcasts = [];
+      state.activeFilters = [];
     },
   },
   extraReducers: (builder) => {
@@ -160,6 +189,11 @@ const podcastSlice = createSlice({
         (state, action: PayloadAction<Podcast[]>) => {
           state.loading = false;
           state.podcasts = action.payload;
+          if (state.activeFilters.length > 0) {
+            state.filteredPodcasts = action.payload.filter((podcast) =>
+              state.activeFilters.includes(podcast.category)
+            );
+          }
         }
       )
       .addCase(
@@ -174,6 +208,12 @@ const podcastSlice = createSlice({
         (state, action: PayloadAction<Podcast>) => {
           state.loading = false;
           state.podcasts.push(action.payload);
+          if (
+            state.activeFilters.length > 0 &&
+            state.activeFilters.includes(action.payload.category)
+          ) {
+            state.filteredPodcasts.push(action.payload);
+          }
         }
       )
       .addCase(
@@ -183,6 +223,11 @@ const podcastSlice = createSlice({
           state.podcasts = state.podcasts.map((p) =>
             p.id === action.payload.id ? action.payload : p
           );
+          if (state.activeFilters.length > 0) {
+            state.filteredPodcasts = state.filteredPodcasts.map((p) =>
+              p.id === action.payload.id ? action.payload : p
+            );
+          }
           if (state.singlePodcast?.id === action.payload.id) {
             state.singlePodcast = action.payload;
           }
@@ -195,6 +240,11 @@ const podcastSlice = createSlice({
           state.podcasts = state.podcasts.filter(
             (p) => p.id !== action.payload
           );
+          if (state.activeFilters.length > 0) {
+            state.filteredPodcasts = state.filteredPodcasts.filter(
+              (p) => p.id !== action.payload
+            );
+          }
           if (state.singlePodcast?.id === action.payload) {
             state.singlePodcast = null;
           }
@@ -215,6 +265,17 @@ const podcastSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      .addCase(
+        filterPodcastsByCategory.fulfilled,
+        (
+          state,
+          action: PayloadAction<Podcast[], string, { arg: string[] }>
+        ) => {
+          state.loading = false;
+          state.filteredPodcasts = action.payload;
+          state.activeFilters = action.meta.arg;
+        }
+      )
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {
@@ -232,5 +293,5 @@ const podcastSlice = createSlice({
   },
 });
 
-export const { resetPodcasts, resetError } = podcastSlice.actions;
+export const { resetPodcasts, resetError, clearFilters } = podcastSlice.actions;
 export default podcastSlice.reducer;
