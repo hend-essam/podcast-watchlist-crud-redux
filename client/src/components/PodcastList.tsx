@@ -103,9 +103,7 @@ const PodcastList = () => {
         )} */}
 
         <div className="w-full h-[385px] max-w-4xl backdrop-blur-lg bg-white/30 border-2 border-white/40 shadow-lg rounded-[40px] p-6 overflow-hidden">
-          {error ? (
-            <ErrorMessage error={error} />
-          ) : (
+          {podcasts.length > 0 ? (
             <div className="h-full overflow-y-auto flex flex-col gap-4 custom-scrollbar">
               {displayedPodcasts.length >= 1 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,6 +129,8 @@ const PodcastList = () => {
                 </div>
               )}
             </div>
+          ) : (
+            <ErrorMessage error={error as string} />
           )}
         </div>
       </div>
