@@ -1,13 +1,7 @@
 import { useAppDispatch } from "../store/hooks";
 import { openPodcastDetails } from "../store/modalSlice";
 import { getSinglePodcast } from "../store/podcastSlice";
-
-type PodcastCardProps = {
-  id: string;
-  title: string;
-  host: string;
-  category: string;
-};
+import { PodcastCardProps } from "../../types";
 
 const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
   const dispatch = useAppDispatch();

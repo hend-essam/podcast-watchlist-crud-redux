@@ -4,11 +4,12 @@
       "id": "1",
       "title": "The Daily",
       "host": "Michael Barbaro",
-      "category": "News",
+      "category": "Entertainment",
       "url": "https://www.example.com/daily",
       "rating": 5,
       "description": "A daily news podcast that covers the biggest stories of our time.",
-      "pin": "1234"
+      "pin": "1234",
+      "updatedAt": "2025-07-28T00:45:17.897Z"
     },
     {
       "id": "2",
@@ -91,25 +92,25 @@
       "title": "hgbfdsxfffffffffffffffffffffffffffffffffffffffffff",
       "host": "fdxhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
       "url": "https://www.example.com/daily",
-      "category": "henddddddddddggggggggggggggggggggggggggggg",
+      "category": "Art & Design",
       "pin": "1234",
       "rating": 5,
       "description": "xdfcvghbjnk",
       "createdAt": "2025-07-22T01:23:30.362Z",
       "id": "fUVSmX7",
-      "updatedAt": "2025-07-23T02:06:35.294Z"
+      "updatedAt": "2025-07-28T00:45:45.116Z"
     },
     {
-      "title": "xcvbnm ,",
+      "title": "xcvbnm",
       "host": "sdfghjk",
-      "url": "https://www.example.com/daily",
+      "url": "https://soundcloud.com/roshdy-osman/ifnury1hlvdd?si=ca39014aa5cd44ccadb2dce8b3133997&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
       "category": "Science",
       "pin": "101",
       "rating": 3,
       "description": "sdfghjk",
       "createdAt": "2025-07-23T22:47:29.822Z",
       "id": "lPy1kIF",
-      "updatedAt": "2025-07-23T22:50:13.617Z"
+      "updatedAt": "2025-08-06T00:49:02.960Z"
     },
     {
       "title": "sdfgh",
@@ -132,6 +133,30 @@
       "description": "sdfghj",
       "createdAt": "2025-07-24T22:22:02.821Z",
       "id": "UubF9-U"
+    },
+    {
+      "title": "xcvbnmj",
+      "host": "hend",
+      "url": "https://soundcloud.com/roshdy-osman/ifnury1hlvdd?si=ca39014aa5cd44ccadb2dce8b3133997&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+      "category": "Music",
+      "pin": "9989",
+      "rating": 2,
+      "description": "sxdfgbhnjk",
+      "createdAt": "2025-07-28T01:16:04.421Z",
+      "id": "RMa0Hvr",
+      "updatedAt": "2025-07-28T01:16:48.082Z"
+    },
+    {
+      "title": "sdfghj",
+      "host": "dsfgbnm",
+      "url": "https://soundcloud.com/roshdy-osman/ifnury1hlvdd?si=ca39014aa5cd44ccadb2dce8b3133997&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+      "category": "Health",
+      "pin": "1010",
+      "rating": 2,
+      "description": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "createdAt": "2025-07-29T01:56:33.390Z",
+      "id": "fm0z-Kk",
+      "updatedAt": "2025-08-06T23:49:54.324Z"
     }
   ]
 }

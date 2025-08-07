@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import PodcastDetails from "./PodcastDetails";
+import PodcastDetails from "./PodcastDetails/index";
 import AddPodcastForm from "./AddPodcastForm";
 import ModalFrame from "./ModalFrame";
 import { closeModal } from "../store/modalSlice";

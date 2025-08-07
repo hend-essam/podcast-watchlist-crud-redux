@@ -2,6 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Podcast, PodcastState } from "../../types";
 
+const ALLOWED_PODCAST_DOMAINS = [
+  "open.spotify.com",
+  "podcasts.apple.com",
+  "soundcloud.com",
+  "youtube.com",
+  "anchor.fm",
+  "youtu.be",
+];
+
 const handleApiError = (error: unknown, rejectWithValue: Function) => {
   if (error instanceof Error) {
     return rejectWithValue(error.message);
@@ -9,12 +18,41 @@ const handleApiError = (error: unknown, rejectWithValue: Function) => {
   return rejectWithValue("Request failed");
 };
 
+const validatePodcastUrl = (
+  url: string
+): { valid: boolean; error?: string } => {
+  try {
+    const parsedUrl = new URL(url);
+    const domain = parsedUrl.hostname.replace("www.", "");
+
+    const isAllowed = ALLOWED_PODCAST_DOMAINS.some(
+      (allowed) => domain === allowed || domain.endsWith(`.${allowed}`)
+    );
+
+    if (!isAllowed) {
+      return {
+        valid: false,
+        error: `We only accept links from: ${ALLOWED_PODCAST_DOMAINS.join(
+          ", "
+        )}`,
+      };
+    }
+
+    return { valid: true };
+  } catch {
+    return {
+      valid: false,
+      error: "Please provide a valid URL (e.g., https://example.com)",
+    };
+  }
+};
+
 export const getPodcast = createAsyncThunk(
   "podcast/getPodcasts",
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetch("http://localhost:3005/podcasts");
-      if (!res.ok) throw new Error("Failed to fetch");
+      if (!res.ok) throw new Error("Failed to fetch podcasts");
       return (await res.json()) as Podcast[];
     } catch (error) {
       return handleApiError(error, rejectWithValue);
@@ -49,7 +87,7 @@ export const deletePodcastByPin = createAsyncThunk(
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to delete");
+        throw new Error(errorData.error || "Failed to delete podcast");
       }
 
       return id;
@@ -66,6 +104,11 @@ export const createPodcast = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const urlValidation = validatePodcastUrl(data.url);
+      if (!urlValidation.valid) {
+        throw new Error(urlValidation.error);
+      }
+
       const res = await fetch(`http://localhost:3005/podcasts`, {
         method: "POST",
         headers: {
@@ -74,7 +117,12 @@ export const createPodcast = createAsyncThunk(
         },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error(await res.text());
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to create podcast");
+      }
+
       return (await res.json()) as Podcast;
     } catch (error) {
       return handleApiError(error, rejectWithValue);
@@ -89,6 +137,13 @@ export const updatePodcast = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      if (data.url) {
+        const urlValidation = validatePodcastUrl(data.url);
+        if (!urlValidation.valid) {
+          throw new Error(urlValidation.error);
+        }
+      }
+
       const payload = {
         ...data,
         pin,
@@ -158,7 +213,7 @@ const initialState: PodcastState["podcast"] = {
   loading: false,
   error: null,
   lastUpdated: null,
-  status: "loading",
+  status: "idle",
   searchResults: [],
   filteredPodcasts: [],
   activeFilters: [],
@@ -181,14 +236,21 @@ const podcastSlice = createSlice({
       state.filteredPodcasts = [];
       state.activeFilters = [];
     },
+    clearSearchResults: (state) => {
+      state.searchResults = [];
+    },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getPodcast.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(
         getPodcast.fulfilled,
         (state, action: PayloadAction<Podcast[]>) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.podcasts = action.payload;
+          state.lastUpdated = new Date().toISOString();
           if (state.activeFilters.length > 0) {
             state.filteredPodcasts = action.payload.filter((podcast) =>
               state.activeFilters.includes(podcast.category)
@@ -196,17 +258,33 @@ const podcastSlice = createSlice({
           }
         }
       )
+      .addCase(getPodcast.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
+      .addCase(getSinglePodcast.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(
         getSinglePodcast.fulfilled,
         (state, action: PayloadAction<Podcast>) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.singlePodcast = action.payload;
         }
       )
+      .addCase(getSinglePodcast.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
+      .addCase(createPodcast.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(
         createPodcast.fulfilled,
         (state, action: PayloadAction<Podcast>) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.podcasts.push(action.payload);
           if (
             state.activeFilters.length > 0 &&
@@ -216,10 +294,18 @@ const podcastSlice = createSlice({
           }
         }
       )
+      .addCase(createPodcast.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
+      .addCase(updatePodcast.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(
         updatePodcast.fulfilled,
         (state, action: PayloadAction<Podcast>) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.podcasts = state.podcasts.map((p) =>
             p.id === action.payload.id ? action.payload : p
           );
@@ -233,10 +319,18 @@ const podcastSlice = createSlice({
           }
         }
       )
+      .addCase(updatePodcast.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
+      .addCase(deletePodcastByPin.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(
         deletePodcastByPin.fulfilled,
         (state, action: PayloadAction<string>) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.podcasts = state.podcasts.filter(
             (p) => p.id !== action.payload
           );
@@ -250,20 +344,28 @@ const podcastSlice = createSlice({
           }
         }
       )
+      .addCase(deletePodcastByPin.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      })
+
       .addCase(searchPodcasts.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.status = "loading";
       })
       .addCase(
         searchPodcasts.fulfilled,
         (state, action: PayloadAction<Podcast[]>) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.searchResults = action.payload;
         }
       )
       .addCase(searchPodcasts.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed";
         state.error = action.payload as string;
+      })
+
+      .addCase(filterPodcastsByCategory.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(
         filterPodcastsByCategory.fulfilled,
@@ -271,27 +373,19 @@ const podcastSlice = createSlice({
           state,
           action: PayloadAction<Podcast[], string, { arg: string[] }>
         ) => {
-          state.loading = false;
+          state.status = "succeeded";
           state.filteredPodcasts = action.payload;
           state.activeFilters = action.meta.arg;
         }
       )
-      .addMatcher(
-        (action) => action.type.endsWith("/pending"),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state, action: PayloadAction<unknown>) => {
-          state.loading = false;
-          state.error = action.payload as string;
-        }
-      );
+      .addCase(filterPodcastsByCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload as string;
+      });
   },
 });
 
-export const { resetPodcasts, resetError, clearFilters } = podcastSlice.actions;
+export const { resetPodcasts, resetError, clearFilters, clearSearchResults } =
+  podcastSlice.actions;
+
 export default podcastSlice.reducer;
