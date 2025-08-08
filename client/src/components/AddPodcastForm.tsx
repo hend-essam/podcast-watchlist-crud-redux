@@ -22,12 +22,20 @@ const AddPodcastForm = () => {
     description: "",
     createdAt: new Date().toISOString(),
   });
-  const [validationError, setValidationError] = useState("");
+  const [touched, setTouched] = useState({
+    title: false,
+    host: false,
+    url: false,
+    category: false,
+    pin: false,
+  });
+  const [urlError, setUrlError] = useState("");
   const [apiError, setApiError] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validateUrl = (url: string): boolean => {
     if (!url) {
-      setValidationError(VALIDATION_MESSAGES.URL_REQUIRED);
+      setUrlError(VALIDATION_MESSAGES.URL_REQUIRED);
       return false;
     }
 
@@ -39,32 +47,52 @@ const AddPodcastForm = () => {
       );
 
       if (!isAllowed) {
-        setValidationError(VALIDATION_MESSAGES.INVALID_DOMAIN);
+        setUrlError(VALIDATION_MESSAGES.INVALID_DOMAIN);
         return false;
       }
 
-      setValidationError("");
+      setUrlError("");
       return true;
     } catch {
-      setValidationError(VALIDATION_MESSAGES.INVALID_URL);
+      setUrlError(VALIDATION_MESSAGES.INVALID_URL);
       return false;
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
 
-    if (name === "url") {
-      validateUrl(value);
+    if (!touched[name as keyof typeof touched]) {
+      setTouched((prev) => ({
+        ...prev,
+        [name]: true,
+      }));
     }
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+
+    if (name === "url") {
+      validateUrl(value);
+    }
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    if (!touched.category) {
+      setTouched((prev) => ({
+        ...prev,
+        category: true,
+      }));
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      category: value,
     }));
   };
 
@@ -75,9 +103,30 @@ const AddPodcastForm = () => {
     }));
   };
 
+  const shouldShowError = (fieldName: keyof typeof touched) => {
+    return (touched[fieldName] || isSubmitted) && !formData[fieldName];
+  };
+
+  const shouldShowUrlError = () => {
+    return (touched.url || isSubmitted) && urlError;
+  };
+
+  const isFormValid = () => {
+    return (
+      !urlError &&
+      formData.title &&
+      formData.host &&
+      formData.url &&
+      formData.category &&
+      formData.pin
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitted(true);
     setApiError("");
+
     if (!validateUrl(formData.url)) {
       return;
     }
@@ -111,107 +160,172 @@ const AddPodcastForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 max-h-[70vh] overflow-y-auto pr-2"
+      className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto pr-2"
     >
-      {["title", "host"].map((field) => (
-        <div key={field} className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="break-words">
+          <label className="block text-sm font-medium mb-1">Title</label>
           <input
             type="text"
-            name={field}
-            placeholder={`${field.charAt(0).toUpperCase() + field.slice(1)}${
-              field === "host" ? " Name" : ""
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className={`w-full rounded-md border p-2 ${
+              shouldShowError("title") ? "border-red-500" : "border-green-800"
             }`}
-            value={formData[field as keyof typeof formData]}
-            onChange={handleChange}
-            className="flex h-10 w-full rounded-md border px-3 py-2 glass"
+            placeholder="Enter podcast title"
             required
           />
+          {shouldShowError("title") && (
+            <p className="text-red-500 text-sm mt-1">
+              {VALIDATION_MESSAGES.TITLE_REQUIRED}
+            </p>
+          )}
         </div>
-      ))}
 
-      <div className="space-y-2">
-        <input
-          type="url"
-          name="url"
-          placeholder="Podcast URL"
-          value={formData.url}
-          onChange={handleChange}
-          className={`flex h-10 w-full rounded-md border px-3 py-2 glass ${
-            validationError ? "border-red-500" : ""
-          }`}
-          required
-        />
-        {validationError && (
-          <p className="text-red-500 text-sm">{validationError}</p>
-        )}
-        <p className="text-xs text-gray-400">
-          Supported platforms: {ALLOWED_PODCAST_DOMAINS.join(", ")}
-        </p>
-      </div>
+        <div className="break-words">
+          <label className="block text-sm font-medium mb-1">Host</label>
+          <input
+            type="text"
+            name="host"
+            value={formData.host}
+            onChange={handleInputChange}
+            className={`w-full rounded-md border p-2 ${
+              shouldShowError("host") ? "border-red-500" : "border-green-800"
+            }`}
+            placeholder="Enter host name"
+            required
+          />
+          {shouldShowError("host") && (
+            <p className="text-red-500 text-sm mt-1">
+              {VALIDATION_MESSAGES.HOST_REQUIRED}
+            </p>
+          )}
+        </div>
 
-      <div className="space-y-2">
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="flex h-10 w-full rounded-md border px-3 py-2 glass"
-          required
-        >
-          <option value="" disabled hidden>
-            Select a category
-          </option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="break-words">
+          <label className="block text-sm font-medium mb-1">Category</label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleCategoryChange}
+            className={`w-full rounded-md border p-2 ${
+              shouldShowError("category")
+                ? "border-red-500"
+                : "border-green-800"
+            }`}
+            required
+          >
+            <option value="">Select a category</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          {shouldShowError("category") && (
+            <p className="text-red-500 text-sm mt-1">
+              {VALIDATION_MESSAGES.CATEGORY_REQUIRED}
+            </p>
+          )}
+        </div>
 
-      <div className="space-y-2">
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          className="flex h-20 w-full rounded-md border px-3 py-2 glass"
-        />
-      </div>
+        <div className="break-words">
+          <label className="block text-sm font-medium mb-1">Rating</label>
+          <StarRating
+            rating={formData.rating}
+            onRatingChange={handleRatingChange}
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Click stars to rate from 0 to 5
+          </p>
+        </div>
 
-      <div className="flex xxs:flex-col sm:flex-row items-center gap-4">
-        <label className="block font-medium">Rating</label>
-        <StarRating
-          rating={formData.rating}
-          onRatingChange={handleRatingChange}
-        />
-      </div>
+        <div className="md:col-span-2 break-words">
+          <label className="block text-sm font-medium mb-1">URL</label>
+          <input
+            type="url"
+            name="url"
+            value={formData.url}
+            onChange={handleInputChange}
+            className={`w-full rounded-md border p-2 ${
+              shouldShowError("url") || shouldShowUrlError()
+                ? "border-red-500"
+                : "border-green-800"
+            }`}
+            placeholder="https://example.com/podcast"
+            required
+          />
 
-      <div className="space-y-2">
-        <input
-          type="number"
-          name="pin"
-          placeholder="PIN"
-          value={formData.pin}
-          onChange={handleChange}
-          className="flex h-10 w-full rounded-md border px-3 py-2 glass"
-          required
-        />
+          {shouldShowUrlError() && (
+            <p className="text-red-500 text-sm mt-1">{urlError}</p>
+          )}
+          <p className="text-xs text-gray-500 mt-1">
+            Supported platforms: {ALLOWED_PODCAST_DOMAINS.join(", ")}
+          </p>
+        </div>
+
+        <div className="md:col-span-2 break-words">
+          <label className="block text-sm font-medium mb-1">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className="w-full rounded-md border border-green-800 p-2"
+            rows={3}
+            placeholder="Add a description (optional)"
+          />
+        </div>
+
+        <div className="md:col-span-2 break-words">
+          <label className="block text-sm font-medium mb-1">PIN</label>
+          <input
+            type="password"
+            name="pin"
+            value={formData.pin}
+            onChange={handleInputChange}
+            className={`w-full rounded-md border p-2 ${
+              shouldShowError("pin") ? "border-red-500" : "border-green-800"
+            }`}
+            placeholder="Enter PIN for future edits"
+            required
+          />
+          {shouldShowError("pin") && (
+            <p className="text-red-500 text-sm mt-1">
+              {VALIDATION_MESSAGES.PIN_REQUIRED}
+            </p>
+          )}
+          <p className="text-xs text-gray-500 mt-1">
+            You'll need this PIN to edit or delete the podcast later
+          </p>
+        </div>
       </div>
 
       {apiError && (
-        <div className="p-2 bg-red-100 text-red-700 rounded-md">{apiError}</div>
+        <div className="p-3 bg-red-50 border border-red-200 rounded text-red-600">
+          <p className="text-sm">{apiError}</p>
+        </div>
       )}
 
-      <button
-        type="submit"
-        className={`w-full bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 ${
-          validationError ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-        disabled={!!validationError}
-      >
-        <Add />
-        Add Podcast
-      </button>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => dispatch(closeModal())}
+          className="mr-3 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={!isFormValid()}
+          className={`bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-md flex items-center justify-center gap-2 transition-colors ${
+            !isFormValid() ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          <Add />
+          Add Podcast
+        </button>
+      </div>
     </form>
   );
 };

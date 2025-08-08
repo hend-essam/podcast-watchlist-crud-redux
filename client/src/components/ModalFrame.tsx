@@ -17,7 +17,6 @@ const ModalFrame: React.FC<ModalFrameProps> = ({
         <div className="space-y-6">
           <div className="flex items-start justify-between gap-4">
             <div className="mb-6 min-w-0 break-words flex-1">
-              {" "}
               <h2 className="text-2xl font-serif text-green-800 break-words">
                 {title}
               </h2>
