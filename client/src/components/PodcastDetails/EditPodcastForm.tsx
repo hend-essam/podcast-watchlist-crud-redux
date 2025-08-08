@@ -1,5 +1,5 @@
 import { Podcast } from "../../../types";
-import { categories } from "../../constants";
+import { ALLOWED_PODCAST_DOMAINS, categories } from "../../constants";
 import StarRating from "../StarRating";
 import { VALIDATION_MESSAGES } from "../../constants";
 
@@ -154,15 +154,9 @@ const EditPodcastForm = ({
             }`}
             required
           />
-          {!editData.url && (
-            <p className="text-red-500 text-sm mt-1">
-              {VALIDATION_MESSAGES.URL_REQUIRED}
-            </p>
-          )}
           {urlError && <p className="text-red-500 text-sm mt-1">{urlError}</p>}
           <p className="text-xs text-gray-500 mt-1">
-            Supported platforms: Spotify, Apple Podcasts, SoundCloud, YouTube,
-            Anchor
+            Supported platforms: {ALLOWED_PODCAST_DOMAINS.join(", ")}
           </p>
         </div>
 
