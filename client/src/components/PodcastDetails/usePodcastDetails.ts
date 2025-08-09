@@ -69,6 +69,10 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
       setError(VALIDATION_MESSAGES.PIN_REQUIRED);
       return;
     }
+    if (pin.length < 4) {
+      setError(VALIDATION_MESSAGES.PIN_TOO_SHORT);
+      return;
+    }
 
     if (!podcast) return;
 
@@ -84,6 +88,10 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
     setError("");
     if (!pin) {
       setError(VALIDATION_MESSAGES.PIN_REQUIRED);
+      return;
+    }
+    if (pin.length < 4) {
+      setError(VALIDATION_MESSAGES.PIN_TOO_SHORT);
       return;
     }
     if (!validateUrl(editData.url || "")) {

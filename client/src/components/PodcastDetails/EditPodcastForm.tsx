@@ -57,7 +57,8 @@ const EditPodcastForm = ({
       editData.title &&
       editData.host &&
       editData.url &&
-      editData.category
+      editData.category &&
+      pin.length >= 4
     );
   };
 
@@ -177,12 +178,19 @@ const EditPodcastForm = ({
 
       <div className="flex flex-col sm:flex-row gap-4">
         <input
-          type="password"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           placeholder="Enter PIN to confirm changes"
           value={pin}
           onChange={(e) => {
             setPin(e.target.value);
             setError("");
+          }}
+          onKeyPress={(e) => {
+            if (!/[0-9]/.test(e.key)) {
+              e.preventDefault();
+            }
           }}
           className="flex-1 h-10 rounded-md border border-gray-300 px-3 py-2"
           required

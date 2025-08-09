@@ -30,6 +30,7 @@ const AddPodcastForm = () => {
     pin: false,
   });
   const [urlError, setUrlError] = useState("");
+  const [pinError, setPinError] = useState("");
   const [apiError, setApiError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -59,6 +60,20 @@ const AddPodcastForm = () => {
     }
   };
 
+  const validatePin = (pin: string): boolean => {
+    if (!pin) {
+      setPinError(VALIDATION_MESSAGES.PIN_REQUIRED);
+      return false;
+    }
+
+    if (pin.length < 4) {
+      setPinError(VALIDATION_MESSAGES.PIN_TOO_SHORT);
+      return false;
+    }
+    setPinError("");
+    return true;
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -78,6 +93,9 @@ const AddPodcastForm = () => {
 
     if (name === "url") {
       validateUrl(value);
+    }
+    if (name === "pin") {
+      validatePin(value);
     }
   };
 
@@ -118,7 +136,8 @@ const AddPodcastForm = () => {
       formData.host &&
       formData.url &&
       formData.category &&
-      formData.pin
+      formData.pin &&
+      !pinError
     );
   };
 
@@ -128,6 +147,9 @@ const AddPodcastForm = () => {
     setApiError("");
 
     if (!validateUrl(formData.url)) {
+      return;
+    }
+    if (!validatePin(formData.pin)) {
       return;
     }
 
@@ -280,21 +302,26 @@ const AddPodcastForm = () => {
         <div className="md:col-span-2 break-words">
           <label className="block text-sm font-medium mb-1">PIN</label>
           <input
-            type="password"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             name="pin"
             value={formData.pin}
             onChange={handleInputChange}
+            onKeyPress={(e) => {
+              if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
             className={`w-full rounded-md border p-2 ${
-              shouldShowError("pin") ? "border-red-500" : "border-green-800"
+              shouldShowError("pin") || pinError
+                ? "border-red-500"
+                : "border-green-800"
             }`}
             placeholder="Enter PIN for future edits"
             required
           />
-          {shouldShowError("pin") && (
-            <p className="text-red-500 text-sm mt-1">
-              {VALIDATION_MESSAGES.PIN_REQUIRED}
-            </p>
-          )}
+          {pinError && <p className="text-red-500 text-sm mt-1">{pinError}</p>}
           <p className="text-xs text-gray-500 mt-1">
             You'll need this PIN to edit or delete the podcast later
           </p>

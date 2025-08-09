@@ -32,21 +32,28 @@ const DeletePodcastForm = ({
       
       <div className="flex flex-col sm:flex-row gap-4">
         <input
-          type="password"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           placeholder="Enter PIN to confirm deletion"
           value={pin}
           onChange={(e) => {
             setPin(e.target.value);
             setError("");
           }}
+          onKeyPress={(e) => {
+            if (!/[0-9]/.test(e.key)) {
+              e.preventDefault();
+            }
+          }}
           className="flex-1 h-10 rounded-md border border-gray-300 px-3 py-2"
           required
         />
         <button
           onClick={onDelete}
-          disabled={!pin}
+          disabled={!pin || pin.length < 4}
           className={`bg-red-600 hover:bg-red-700 h-10 text-white sm:w-[40%] rounded-3xl transition-colors ${
-            !pin ? "opacity-50 cursor-not-allowed" : ""
+            !pin || pin.length < 4 ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
           Delete Permanently

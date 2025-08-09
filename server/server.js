@@ -62,6 +62,8 @@ const validatePin = (pin, podcastId = null) => {
   if (!pin) return { valid: false, error: "PIN is required" };
   if (typeof pin !== "string")
     return { valid: false, error: "PIN must be a string" };
+  if (!/^\d+$/.test(pin)) return { valid: false, error: "PIN must contain only numbers" };
+  if (pin.length < 4) return { valid: false, error: "PIN must be at least 4 digits" };
 
   if (podcastId) {
     const db = router.db.getState();
