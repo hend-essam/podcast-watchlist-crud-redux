@@ -210,7 +210,6 @@ export const filterPodcastsByCategory = createAsyncThunk(
 const initialState: PodcastState["podcast"] = {
   podcasts: [],
   singlePodcast: null,
-  loading: false,
   error: null,
   lastUpdated: null,
   status: "idle",

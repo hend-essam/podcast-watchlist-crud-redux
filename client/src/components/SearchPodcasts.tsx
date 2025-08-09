@@ -3,14 +3,9 @@ import { useState } from "react";
 interface SearchPodcastsProps {
   onSearch: (searchTerm: string) => void;
   onClear: () => void;
-  isLoading?: boolean;
 }
 
-const SearchPodcasts = ({
-  onSearch,
-  onClear,
-  isLoading,
-}: SearchPodcastsProps) => {
+const SearchPodcasts = ({ onSearch, onClear }: SearchPodcastsProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,13 +32,12 @@ const SearchPodcasts = ({
       />
       <button
         type="submit"
-        disabled={isLoading || !searchTerm.trim()}
         className="absolute right-3 top-1/2 transform -translate-y-1/2"
       >
         <img
           src="./loupe.png"
           width="25px"
-          className={`cursor-pointer ${isLoading ? "opacity-50" : ""}`}
+          className={`cursor-pointer`}
           alt="search podcast"
         />
       </button>

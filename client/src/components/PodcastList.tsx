@@ -14,14 +14,8 @@ import SearchPodcasts from "./SearchPodcasts";
 
 const PodcastList = () => {
   const dispatch = useAppDispatch();
-  const {
-    podcasts,
-    searchResults,
-    filteredPodcasts,
-    activeFilters,
-    error,
-    loading,
-  } = useSelector((state: PodcastState) => state.podcast);
+  const { podcasts, searchResults, filteredPodcasts, activeFilters, error } =
+    useSelector((state: PodcastState) => state.podcast);
 
   const [isSearching, setIsSearching] = useState(false);
 
@@ -60,11 +54,7 @@ const PodcastList = () => {
 
       <div className="relative xxs:px-[20px] xs:px-[30px] sm:px-[65px] md:px-[70px] lg:px-[120px] h-full pt-[50px] pb-[20px] z-3 flex flex-col items-center gap-4">
         <div className="relative sm:w-[60%] md:w-[75%] max-w-md">
-          <SearchPodcasts
-            onSearch={handleSearch}
-            onClear={handleClearSearch}
-            isLoading={loading}
-          />
+          <SearchPodcasts onSearch={handleSearch} onClear={handleClearSearch} />
         </div>
         {/* {activeFilters.length > 0 && (
           <div className="flex flex-wrap gap-2">

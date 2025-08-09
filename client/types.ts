@@ -15,7 +15,6 @@ export interface PodcastState {
   podcast: {
     podcasts: Podcast[];
     singlePodcast: Podcast | null;
-    loading: boolean;
     error: string | null;
     lastUpdated: string | null;
     status: "idle" | "loading" | "succeeded" | "failed";

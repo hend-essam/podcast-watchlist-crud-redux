@@ -6,11 +6,11 @@ import { useAppSelector } from "./store/hooks";
 import AddButton from "./components/AddButton";
 
 function App() {
-  const { loading } = useAppSelector((state) => state.podcast);
+  const { status } = useAppSelector((state) => state.podcast);
 
   return (
     <div className="bg-[#eadcc2] min-h-screen py-[5vh]">
-      {loading && <Loading />}
+      {status === "loading" && <Loading />}
       <AddButton />
       <FilterSidebar />
       <PodcastList />
