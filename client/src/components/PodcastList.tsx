@@ -55,10 +55,10 @@ const PodcastList = () => {
   const displayedPodcasts = getDisplayedPodcasts();
 
   return (
-    <div className="relative w-full max-h-[545px] pt-[70px] pb-[30px] max-w-4xl mx-auto">
-      <div className="absolute h-full w-full top-0 aspect-[2/1] rounded-t-full bg-[url(greenFlowers.jpg)] bg-cover bg-center z-0" />
+    <div className="relative w-full h-[calc(100vh-10vh)] max-w-4xl mx-auto">
+      <div className="absolute bg-repeat-y h-[inherit] w-full top-0 rounded-t-full bg-[url(greenFlowers.jpg)] bg-top z-0" />
 
-      <div className="relative xxs:px-[20px] xs:px-[30px] sm:px-[65px] md:px-[70px] lg:px-[120px] max-h-fit z-3 flex flex-col items-center gap-4 justify-around">
+      <div className="relative xxs:px-[20px] xs:px-[30px] sm:px-[65px] md:px-[70px] lg:px-[120px] h-full pt-[50px] pb-[20px] z-3 flex flex-col items-center gap-4">
         <div className="relative sm:w-[60%] md:w-[75%] max-w-md">
           <SearchPodcasts
             onSearch={handleSearch}
@@ -102,7 +102,7 @@ const PodcastList = () => {
           </div>
         )} */}
 
-        <div className="w-full h-[385px] max-w-4xl backdrop-blur-lg bg-white/30 border-2 border-white/40 shadow-lg rounded-[40px] p-6 overflow-hidden">
+        <div className="w-full flex-1/2 max-w-4xl backdrop-blur-lg bg-white/30 border-2 border-white/40 shadow-lg rounded-[40px] p-6 overflow-hidden">
           {podcasts.length > 0 ? (
             <div className="h-full overflow-y-auto flex flex-col gap-4 custom-scrollbar">
               {displayedPodcasts.length >= 1 ? (

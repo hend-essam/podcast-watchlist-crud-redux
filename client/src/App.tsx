@@ -9,7 +9,7 @@ function App() {
   const { loading } = useAppSelector((state) => state.podcast);
 
   return (
-    <div className="bg-[#eadcc2] min-h-screen xs:px-6 py-8">
+    <div className="bg-[#eadcc2] min-h-screen py-[5vh]">
       {loading && <Loading />}
       <AddButton />
       <FilterSidebar />
