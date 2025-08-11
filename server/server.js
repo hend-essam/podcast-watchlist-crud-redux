@@ -1,3 +1,4 @@
+require("dotenv").config();
 const {
   create,
   router: _router,
@@ -8,7 +9,7 @@ const server = create();
 const router = _router("db.json");
 const middlewares = defaults();
 
-const ADMIN_PIN = process.env.ADMIN_PIN || "1234";
+const ADMIN_PIN = process.env.ADMIN_PIN;
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
   "podcasts.apple.com",
@@ -61,9 +62,11 @@ const validateUrl = (url) => {
 const validatePin = (pin, podcastId = null) => {
   if (!pin) return { valid: false, error: "PIN is required" };
   if (typeof pin !== "string")
-    return { valid: false, error: "PIN must be a string" };
-  if (!/^\d+$/.test(pin)) return { valid: false, error: "PIN must contain only numbers" };
-  if (pin.length < 4) return { valid: false, error: "PIN must be at least 4 digits" };
+    return { valid: false, error: "PIN must be a numbers" };
+  if (!/^\d+$/.test(pin))
+    return { valid: false, error: "PIN must contain only numbers" };
+  if (pin.length < 4)
+    return { valid: false, error: "PIN must be at least 4 digits" };
 
   if (podcastId) {
     const db = router.db.getState();
@@ -214,13 +217,8 @@ server.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT;
 server.listen(PORT, () => {
   console.log(`JSON Server is running on http://localhost:${PORT}`);
-  if (ADMIN_PIN === "1234") {
-    console.warn(
-      "⚠️  Warning: Using default admin PIN. Change this in production!"
-    );
-  }
   console.log(`Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`);
 });
