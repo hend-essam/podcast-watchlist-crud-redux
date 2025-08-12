@@ -207,6 +207,32 @@ server.use((req, res, next) => {
   next();
 });
 
+server.use((req, res, next) => {
+  const oldRender = router.render;
+  router.render = (req, res) => {
+    const originalResponse = res.locals.data;
+
+    if (req.method === "GET") {
+      if (Array.isArray(originalResponse)) {
+        res.locals.data = originalResponse.map((item) => {
+          if (item && typeof item === "object") {
+            const { pin, ...rest } = item;
+            return rest;
+          }
+          return item;
+        });
+      } else if (originalResponse && typeof originalResponse === "object") {
+        const { pin, ...rest } = originalResponse;
+        res.locals.data = rest;
+      }
+    }
+
+    oldRender(req, res);
+  };
+
+  next();
+});
+
 server.use(router);
 
 server.use((err, req, res, next) => {

@@ -2,6 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Podcast, PodcastState } from "../../types";
 
+const production = true;
+
+const API_URL = production
+  ? import.meta.env.VITE_API_URL
+  : "https://localhost:3005/podcasts";
+
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
   "podcasts.apple.com",
@@ -51,7 +57,10 @@ export const getPodcast = createAsyncThunk(
   "podcast/getPodcasts",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await fetch("http://localhost:3005/podcasts");
+      if (!API_URL) {
+        throw new Error("API_URL is not defined");
+      }
+      const res = await fetch(API_URL);
       if (!res.ok) throw new Error("Failed to fetch podcasts");
       return (await res.json()) as Podcast[];
     } catch (error) {
@@ -64,7 +73,7 @@ export const getSinglePodcast = createAsyncThunk(
   "podcast/getSinglePodcast",
   async (id: string, { rejectWithValue }) => {
     try {
-      const res = await fetch(`http://localhost:3005/podcasts/${id}`);
+      const res = await fetch(API_URL + "/" + id);
       if (!res.ok) throw new Error(await res.text());
       return (await res.json()) as Podcast;
     } catch (error) {
@@ -77,7 +86,7 @@ export const deletePodcastByPin = createAsyncThunk(
   "podcast/deletePodcast",
   async ({ id, pin }: { id: string; pin: string }, { rejectWithValue }) => {
     try {
-      const res = await fetch(`http://localhost:3005/podcasts/${id}`, {
+      const res = await fetch(API_URL + "/" + id, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +118,10 @@ export const createPodcast = createAsyncThunk(
         throw new Error(urlValidation.error);
       }
 
-      const res = await fetch(`http://localhost:3005/podcasts`, {
+      if (!API_URL) {
+        throw new Error("API_URL is not defined");
+      }
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,7 +161,7 @@ export const updatePodcast = createAsyncThunk(
         pin,
       };
 
-      const res = await fetch(`http://localhost:3005/podcasts/${id}`, {
+      const res = await fetch(API_URL + "/" + id, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -174,9 +186,7 @@ export const searchPodcasts = createAsyncThunk(
   "podcast/searchPodcasts",
   async (searchTerm: string, { rejectWithValue }) => {
     try {
-      const res = await fetch(
-        `http://localhost:3005/podcasts?q=${encodeURIComponent(searchTerm)}`
-      );
+      const res = await fetch(`${API_URL}?q=${encodeURIComponent(searchTerm)}`);
 
       if (!res.ok) throw new Error("Search failed");
       return (await res.json()) as Podcast[];
