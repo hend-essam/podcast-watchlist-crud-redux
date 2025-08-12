@@ -50,7 +50,7 @@ const PodcastList = () => {
 
   return (
     <div className="relative w-full h-[calc(100vh-10vh)] max-w-4xl mx-auto">
-      <div className="absolute bg-repeat-y h-[inherit] w-full top-0 rounded-t-full bg-[url(greenFlowers.jpg)] bg-top z-0" />
+      <div className="absolute bg-repeat-y h-[inherit] w-full top-0 rounded-t-full bg-[url(/greenFlowers.jpg)] bg-top z-0" />
 
       <div className="relative xxs:px-[20px] xs:px-[30px] sm:px-[65px] md:px-[70px] lg:px-[120px] h-full pt-[50px] pb-[20px] z-3 flex flex-col items-center gap-4">
         <div className="relative sm:w-[60%] md:w-[75%] max-w-md">
