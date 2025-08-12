@@ -5,8 +5,8 @@ import ErrorMessage from "./ErrorMessage";
 import {
   getPodcast,
   searchPodcasts,
-  filterPodcastsByCategory,
-  clearFilters,
+  // filterPodcastsByCategory,
+  //clearFilters,
 } from "../store/podcastSlice";
 import { useAppDispatch } from "../store/hooks";
 import { useEffect, useState } from "react";
