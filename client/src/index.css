@@ -39,3 +39,11 @@ input[type="number"] {
 :focus {
   outline-style: none;
 }
+.direction-rtl {
+  direction: rtl;
+  text-align: left;
+}
+
+.direction-ltr {
+  direction: ltr;
+}

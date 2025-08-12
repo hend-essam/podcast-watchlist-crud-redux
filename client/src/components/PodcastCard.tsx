@@ -4,6 +4,11 @@ import { openPodcastDetails } from "../store/modalSlice";
 import { getSinglePodcast } from "../store/podcastSlice";
 import { PodcastCardProps } from "../../types";
 
+const getDirection = (text: string) => {
+  const arabicPattern = /[\u0600-\u06FF]/;
+  return arabicPattern.test(text) ? "rtl" : "ltr";
+};
+
 const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
   const dispatch = useAppDispatch();
   const [error, setError] = useState<string | null>(null);
@@ -23,12 +28,20 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
     }
   };
 
+  const titleDirection = getDirection(title);
+
   return (
     <div className="glass p-4 rounded-[20px] border border-white/30">
       {!error ? (
         <div className="flex justify-between items-center gap-3 transition-transform duration-100 hover:scale-[1.02]">
           <div className="min-w-0">
-            <h3 className="text-lg font-medium truncate">{title}</h3>
+            <h3
+              className={`text-lg font-medium truncate overflow-hidden whitespace-nowrap ${
+                titleDirection === "rtl" ? "direction-rtl" : "direction-ltr"
+              }`}
+            >
+              {title}
+            </h3>
             <p className="text-sm truncate">Host: {host}</p>
             <p className="text-sm truncate">Category: {category}</p>
           </div>
