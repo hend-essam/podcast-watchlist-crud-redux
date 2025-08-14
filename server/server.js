@@ -6,11 +6,14 @@ const {
   bodyParser,
 } = require("json-server");
 const server = create();
-const router = _router("db.json");
 const middlewares = defaults();
+
+const path = require("path");
+const router = _router(path.join(__dirname, "db.json"));
 
 const ADMIN_PIN = process.env.ADMIN_PIN;
 const NODE_ENV = process.env.NODE_ENV;
+const PORT = process.env.PORT;
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
   "podcasts.apple.com",
@@ -243,12 +246,12 @@ server.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT;
-NODE_ENV === "production"
-  ? (module.exports = server)
-  : server.listen(PORT, () => {
-      console.log(`JSON Server is running on http://localhost:${PORT}`);
-      console.log(
-        `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
-      );
-    });
+//NODE_ENV === "production"
+//?
+module.exports = server;
+//: server.listen(PORT, () => {
+//  console.log(`JSON Server is running on http://localhost:${PORT}`);
+//  console.log(
+//    `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
+//  );
+// });
