@@ -1,36 +1,40 @@
-require("dotenv").config({ silent: true });
-const jsonServer = require("json-server");
-const server = jsonServer.create();
-const path = require("path");
+require("dotenv").config();
+const {
+  create,
+  router: _router,
+  defaults,
+  bodyParser,
+} = require("json-server");
+const server = create();
+const middlewares = defaults();
 
-const router = jsonServer.router(path.join(__dirname, "db.json"));
-const middlewares = jsonServer.defaults();
+const path = require("path");
+const router = _router(path.join(__dirname, "db.json"));
+
+const ADMIN_PIN = process.env.ADMIN_PIN;
+const NODE_ENV = process.env.NODE_ENV;
+const PORT = process.env.PORT;
+const ALLOWED_PODCAST_DOMAINS = [
+  "open.spotify.com",
+  "podcasts.apple.com",
+  "soundcloud.com",
+  "youtube.com",
+  "anchor.fm",
+  "youtu.be",
+];
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
+const RATE_LIMIT_MAX = 100;
 
 server.use((req, res, next) => {
-  const allowedOrigins = ["http://localhost:5173"];
-  const origin = req.headers.origin;
-
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  console.log(`${req.method} ${req.url}`);
   next();
 });
 
 server.use(middlewares);
-server.use(jsonServer.bodyParser);
-server.use("/podcasts", (req, res, next) => {
-  next();
-});
-
-server.use(router);
+server.use(bodyParser);
 
 const validateUrl = (url) => {
   try {
