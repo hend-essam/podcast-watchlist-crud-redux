@@ -10,6 +10,7 @@ const router = _router("db.json");
 const middlewares = defaults();
 
 const ADMIN_PIN = process.env.ADMIN_PIN;
+const NODE_ENV = process.env.NODE_ENV;
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
   "podcasts.apple.com",
@@ -177,8 +178,7 @@ server.use((req, res, next) => {
     console.error("Validation error:", error);
     res.status(500).json({
       error: "Internal server error",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
+      details: NODE_ENV === "production" ? undefined : error.message,
     });
   }
 });
@@ -239,12 +239,16 @@ server.use((err, req, res, next) => {
   console.error("Server error:", err);
   res.status(500).json({
     error: "Internal server error",
-    details: process.env.NODE_ENV === "development" ? err.message : undefined,
+    details: NODE_ENV === "production" ? undefined : err.message,
   });
 });
 
 const PORT = process.env.PORT;
-server.listen(PORT, () => {
-  console.log(`JSON Server is running on http://localhost:${PORT}`);
-  console.log(`Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`);
-});
+NODE_ENV === "production"
+  ? (module.exports = server)
+  : server.listen(PORT, () => {
+      console.log(`JSON Server is running on http://localhost:${PORT}`);
+      console.log(
+        `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
+      );
+    });
