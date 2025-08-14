@@ -2,11 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Podcast, PodcastState } from "../../types";
 
-const production = true;
-
-const API_URL = production
-  ? import.meta.env.VITE_API_URL
-  : "https://localhost:3005/podcasts";
+const API_URL =
+  "https://podcast-watchlist-crud-redux-backen.vercel.app/podcasts";
+// const API_URL = "http://localhost:3000/podcasts";
 
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
