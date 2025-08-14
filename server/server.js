@@ -1,19 +1,19 @@
-require("dotenv").config({ silent: true });
-
+require("dotenv").config();
 const {
   create,
   router: _router,
   defaults,
   bodyParser,
 } = require("json-server");
-const path = require("path");
 const server = create();
-
-const router = _router(path.join(__dirname, "db.json"));
 const middlewares = defaults();
 
+const path = require("path");
+const router = _router(path.join(__dirname, "db.json"));
+
 const ADMIN_PIN = process.env.ADMIN_PIN;
-const NODE_ENV = process.env.NODE_ENV || "development";
+const NODE_ENV = process.env.NODE_ENV;
+const PORT = process.env.PORT;
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
   "podcasts.apple.com",
@@ -26,31 +26,10 @@ const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
 const RATE_LIMIT_MAX = 100;
 
 server.use((req, res, next) => {
-  const allowedOrigins = [
-    "http://localhost:5173",
-    "https://podcast-watchlist-crud-redux.vercel.app",
-  ];
-
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  console.log(`${req.method} ${req.url}`);
   next();
 });
 
@@ -61,17 +40,20 @@ const validateUrl = (url) => {
   try {
     const parsedUrl = new URL(url);
     const domain = parsedUrl.hostname.replace("www.", "");
+
     const isAllowed = ALLOWED_PODCAST_DOMAINS.some(
       (allowed) => domain === allowed || domain.endsWith(`.${allowed}`)
     );
 
-    return isAllowed
-      ? { valid: true }
-      : {
-          valid: false,
-          error: "Unsupported podcast platform",
-          details: `Allowed domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`,
-        };
+    if (!isAllowed) {
+      return {
+        valid: false,
+        error: "Unsupported podcast platform",
+        details: `Allowed domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`,
+      };
+    }
+
+    return { valid: true };
   } catch {
     return {
       valid: false,
@@ -84,14 +66,16 @@ const validateUrl = (url) => {
 const validatePin = (pin, podcastId = null) => {
   if (!pin) return { valid: false, error: "PIN is required" };
   if (typeof pin !== "string")
-    return { valid: false, error: "PIN must be a string" };
+    return { valid: false, error: "PIN must be a numbers" };
   if (!/^\d+$/.test(pin))
     return { valid: false, error: "PIN must contain only numbers" };
   if (pin.length < 4)
     return { valid: false, error: "PIN must be at least 4 digits" };
 
   if (podcastId) {
-    const podcast = router.db.get("podcasts").getById(podcastId).value();
+    const db = router.db.getState();
+    const podcast = db.podcasts.find((p) => p.id === podcastId);
+
     if (!podcast) return { valid: false, error: "Podcast not found" };
     if (pin !== ADMIN_PIN && pin !== podcast.pin) {
       return { valid: false, error: "Invalid PIN for this podcast" };
@@ -105,14 +89,14 @@ server.use((req, res, next) => {
   try {
     if (req.method === "GET" && (req.query.q || req.query.search)) {
       const searchTerm = (req.query.q || req.query.search).toLowerCase();
-      const results = router.db
-        .get("podcasts")
-        .filter((podcast) =>
-          ["title", "host", "description"].some((field) =>
-            podcast[field]?.toLowerCase().includes(searchTerm)
-          )
-        )
-        .value();
+      const db = router.db.getState();
+      const results = db.podcasts.filter((podcast) => {
+        return (
+          podcast.title?.toString().toLowerCase().includes(searchTerm) ||
+          podcast.host?.toString().toLowerCase().includes(searchTerm) ||
+          podcast.description?.toString().toLowerCase().includes(searchTerm)
+        );
+      });
       return res.json(results);
     }
 
@@ -123,7 +107,9 @@ server.use((req, res, next) => {
 
       if (!validation.valid) {
         return res
-          .status(validation.error.includes("Invalid") ? 403 : 400)
+          .status(
+            validation.error === "Invalid PIN for this podcast" ? 403 : 400
+          )
           .json(validation);
       }
       return next();
@@ -132,7 +118,9 @@ server.use((req, res, next) => {
     if (["POST", "PUT", "PATCH"].includes(req.method)) {
       if (req.body.url) {
         const urlValidation = validateUrl(req.body.url);
-        if (!urlValidation.valid) return res.status(400).json(urlValidation);
+        if (!urlValidation.valid) {
+          return res.status(400).json(urlValidation);
+        }
       }
 
       if (["POST", "PUT"].includes(req.method)) {
@@ -141,7 +129,7 @@ server.use((req, res, next) => {
           (field) => !req.body[field]
         );
 
-        if (missingFields.length) {
+        if (missingFields.length > 0) {
           return res.status(400).json({
             error: "Missing required fields",
             details: `Please provide: ${missingFields.join(", ")}`,
@@ -150,22 +138,26 @@ server.use((req, res, next) => {
         }
       }
 
-      const podcastId = ["PUT", "PATCH"].includes(req.method)
-        ? req.url.split("/").pop()
-        : null;
-      const pinValidation = validatePin(req.body.pin, podcastId);
+      const pinValidation = validatePin(
+        req.body.pin,
+        ["PUT", "PATCH"].includes(req.method) ? req.url.split("/").pop() : null
+      );
       if (!pinValidation.valid) {
         return res
-          .status(pinValidation.error.includes("Invalid") ? 403 : 400)
+          .status(
+            pinValidation.error === "Invalid PIN for this podcast" ? 403 : 400
+          )
           .json(pinValidation);
       }
 
-      if (req.body.pin === ADMIN_PIN) delete req.body.pin;
+      if (req.body.pin === ADMIN_PIN) {
+        delete req.body.pin;
+      }
     }
 
     if (req.method === "PATCH") {
       const updateFields = Object.keys(req.body).filter((key) => key !== "pin");
-      if (!updateFields.length) {
+      if (updateFields.length === 0) {
         return res.status(400).json({
           error: "No fields to update",
           details: "Provide at least one field to update besides PIN",
@@ -194,47 +186,46 @@ server.use((req, res, next) => {
   }
 });
 
-const rateLimit = new Map();
+const rateLimit = {};
 server.use((req, res, next) => {
   const ip = req.ip;
   const now = Date.now();
-  const windowStart = now - RATE_LIMIT_WINDOW;
 
-  rateLimit.forEach((value, key) => {
-    if (value.startTime < windowStart) rateLimit.delete(key);
-  });
+  if (!rateLimit[ip]) {
+    rateLimit[ip] = { count: 0, startTime: now };
+  }
 
-  const record = rateLimit.get(ip) || { count: 0, startTime: now };
+  if (now - rateLimit[ip].startTime > RATE_LIMIT_WINDOW) {
+    rateLimit[ip] = { count: 0, startTime: now };
+  }
 
-  if (record.count >= RATE_LIMIT_MAX) {
+  if (rateLimit[ip].count >= RATE_LIMIT_MAX) {
     return res.status(429).json({
       error: "Too many requests",
       details: `Please try again after ${RATE_LIMIT_WINDOW / 60000} minutes`,
     });
   }
 
-  record.count++;
-  rateLimit.set(ip, record);
+  rateLimit[ip].count++;
   next();
 });
 
 server.use((req, res, next) => {
   const oldRender = router.render;
-
   router.render = (req, res) => {
-    const data = res.locals.data;
+    const originalResponse = res.locals.data;
 
-    if (req.method === "GET" && data) {
-      if (Array.isArray(data)) {
-        res.locals.data = data.map((item) => {
+    if (req.method === "GET") {
+      if (Array.isArray(originalResponse)) {
+        res.locals.data = originalResponse.map((item) => {
           if (item && typeof item === "object") {
             const { pin, ...rest } = item;
             return rest;
           }
           return item;
         });
-      } else if (typeof data === "object") {
-        const { pin, ...rest } = data;
+      } else if (originalResponse && typeof originalResponse === "object") {
+        const { pin, ...rest } = originalResponse;
         res.locals.data = rest;
       }
     }
@@ -255,4 +246,12 @@ server.use((err, req, res, next) => {
   });
 });
 
+//NODE_ENV === "production"
+//?
 module.exports = server;
+//: server.listen(PORT, () => {
+//  console.log(`JSON Server is running on http://localhost:${PORT}`);
+//  console.log(
+//    `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
+//  );
+// });
