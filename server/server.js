@@ -26,29 +26,9 @@ const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
 const RATE_LIMIT_MAX = 100;
 
 server.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-    );
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, X-Requested-With"
-    );
-    res.header("Access-Control-Max-Age", "86400"); // 24 hours
-    return res.status(200).end();
-  }
-
   res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
-  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   console.log(`${req.method} ${req.url}`);
   next();
 });
@@ -266,13 +246,12 @@ server.use((err, req, res, next) => {
   });
 });
 
-if (NODE_ENV === "production") {
-  module.exports = server;
-} else {
-  server.listen(PORT || 3005, () => {
-    console.log(`JSON Server is running on http://localhost:${PORT || 3005}`);
-    console.log(
-      `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
-    );
-  });
-}
+//NODE_ENV === "production"
+//?
+module.exports = server;
+//: server.listen(PORT, () => {
+//  console.log(`JSON Server is running on http://localhost:${PORT}`);
+//  console.log(
+//    `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
+//  );
+// });
