@@ -29,6 +29,7 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
   };
 
   const titleDirection = getDirection(title);
+  const hostDirection = getDirection(host);
 
   return (
     <div className="glass p-4 rounded-[20px] border border-white/30">
@@ -42,7 +43,16 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
             >
               {title}
             </h3>
-            <p className="text-sm truncate">Host: {host}</p>
+            <p className="text-sm flex gap-1 items-center">
+              <span className="direction-ltr">Host:</span>
+              <span
+                className={`truncate overflow-hidden whitespace-nowrap 
+                  ${hostDirection === "rtl" ? "direction-rtl" : "direction-ltr"}
+                `}
+              >
+                {host}
+              </span>
+            </p>
             <p className="text-sm truncate">Category: {category}</p>
           </div>
           <button
