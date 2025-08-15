@@ -5,15 +5,30 @@ import { categories } from "../constants";
 
 const FilterSidebar = () => {
   const dispatch = useAppDispatch();
-  const { isOpen } = useAppSelector((state) => state.modal);
   const { activeFilters } = useAppSelector((state) => state.podcast);
   const [isOpenSideBar, setIsOpenSideBar] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setIsOpenSideBar(false);
-    }
-  }, [isOpen]);
+    if (!isOpenSideBar) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const sidebar = document.getElementById("filter-sidebar");
+      const button = document.getElementById("filter-toggle-btn");
+      if (
+        sidebar &&
+        !sidebar.contains(event.target as Node) &&
+        button &&
+        !button.contains(event.target as Node)
+      ) {
+        setIsOpenSideBar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpenSideBar]);
 
   const handleCategoryToggle = (category: string) => {
     const newFilters = activeFilters.includes(category)
@@ -30,6 +45,7 @@ const FilterSidebar = () => {
   return (
     <div className="relative">
       <button
+        id="filter-toggle-btn"
         onClick={() => setIsOpenSideBar(!isOpenSideBar)}
         aria-expanded={isOpenSideBar}
         aria-label={isOpenSideBar ? "Close filters" : "Open filters"}
@@ -46,6 +62,7 @@ const FilterSidebar = () => {
         />
       </button>
       <aside
+        id="filter-sidebar"
         className={`fixed top-0 left-0 h-full w-[200px] bg-white/40 backdrop-blur-md border-r-2 border-white/40 p-4 transition-transform duration-300 z-4 ${
           isOpenSideBar ? "translate-x-0" : "-translate-x-full"
         }`}
