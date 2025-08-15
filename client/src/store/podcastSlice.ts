@@ -4,7 +4,7 @@ import { Podcast, PodcastState } from "../../types";
 
 const API_URL =
   "https://podcast-watchlist-crud-redux-backen.vercel.app/podcasts";
-// const API_URL = "http://localhost:3000/podcasts";
+// const API_URL = "http://localhost:3005/podcasts";
 
 const ALLOWED_PODCAST_DOMAINS = [
   "open.spotify.com",
