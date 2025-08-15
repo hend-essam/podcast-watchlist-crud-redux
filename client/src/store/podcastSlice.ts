@@ -97,7 +97,16 @@ export const deletePodcastByPin = createAsyncThunk(
         throw new Error(errorData.error || "Failed to delete podcast");
       }
 
-      return id;
+      try {
+        const responseData = await res.json();
+        return responseData.id || id;
+      } catch (parseError) {
+        console.warn(
+          "Failed to parse delete response, assuming success:",
+          parseError
+        );
+        return id;
+      }
     } catch (error) {
       return handleApiError(error, rejectWithValue);
     }
@@ -123,9 +132,8 @@ export const createPodcast = createAsyncThunk(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-PIN": pin,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, pin }),
       });
 
       if (!res.ok) {
@@ -133,7 +141,18 @@ export const createPodcast = createAsyncThunk(
         throw new Error(errorData.error || "Failed to create podcast");
       }
 
-      return (await res.json()) as Podcast;
+      try {
+        const responseData = await res.json();
+        return responseData as Podcast;
+      } catch (parseError) {
+        console.warn("Failed to parse create response:", parseError);
+        return {
+          ...data,
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as Podcast;
+      }
     } catch (error) {
       return handleApiError(error, rejectWithValue);
     }
@@ -163,7 +182,6 @@ export const updatePodcast = createAsyncThunk(
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "X-PIN": pin,
         },
         body: JSON.stringify(payload),
       });
@@ -173,7 +191,13 @@ export const updatePodcast = createAsyncThunk(
         throw new Error(errorData.error || "Failed to update podcast");
       }
 
-      return (await res.json()) as Podcast;
+      try {
+        const responseData = await res.json();
+        return responseData as Podcast;
+      } catch (parseError) {
+        console.warn("Failed to parse update response:", parseError);
+        return { ...data, id } as Podcast;
+      }
     } catch (error) {
       return handleApiError(error, rejectWithValue);
     }

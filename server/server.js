@@ -29,7 +29,20 @@ server.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  console.log(`${req.method} ${req.url}`);
+  console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
+
+  if (
+    (req.method === "DELETE" ||
+      req.method === "PATCH" ||
+      req.method === "POST") &&
+    req.body
+  ) {
+    console.log(`${req.method} request body:`, JSON.stringify(req.body));
+    if (req.method === "POST") {
+      console.log(`Creating new podcast: ${req.body.title || "Untitled"}`);
+    }
+  }
+
   next();
 });
 
@@ -112,10 +125,174 @@ server.use((req, res, next) => {
           )
           .json(validation);
       }
-      return next();
+
+      try {
+        const db = router.db.getState();
+        const podcastIndex = db.podcasts.findIndex((p) => p.id === id);
+
+        if (podcastIndex === -1) {
+          console.log(`Podcast with id ${id} not found`);
+          return res.status(404).json({ error: "Podcast not found" });
+        }
+
+        const deletedPodcast = db.podcasts[podcastIndex];
+        db.podcasts.splice(podcastIndex, 1);
+        router.db.setState(db);
+
+        console.log(
+          `Successfully deleted podcast: ${deletedPodcast.title} (ID: ${id})`
+        );
+
+        return res.status(200).json({
+          message: "Podcast deleted successfully",
+          id,
+          deletedPodcast: {
+            title: deletedPodcast.title,
+            host: deletedPodcast.host,
+          },
+        });
+      } catch (error) {
+        console.error("Delete error:", error);
+        return res.status(500).json({
+          error: "Failed to delete podcast",
+          details: NODE_ENV === "production" ? undefined : error.message,
+        });
+      }
     }
 
-    if (["POST", "PUT", "PATCH"].includes(req.method)) {
+    if (req.method === "PATCH") {
+      const { pin, ...updateData } = req.body;
+      const id = req.url.split("/").pop();
+
+      const pinValidation = validatePin(pin, id);
+      if (!pinValidation.valid) {
+        return res
+          .status(
+            pinValidation.error === "Invalid PIN for this podcast" ? 403 : 400
+          )
+          .json(pinValidation);
+      }
+
+      if (updateData.url) {
+        const urlValidation = validateUrl(updateData.url);
+        if (!urlValidation.valid) {
+          return res.status(400).json(urlValidation);
+        }
+      }
+
+      const updateFields = Object.keys(updateData);
+      if (updateFields.length === 0) {
+        return res.status(400).json({
+          error: "No fields to update",
+          details: "Provide at least one field to update besides PIN",
+        });
+      }
+
+      if (updateData.rating !== undefined) {
+        const rating = Number(updateData.rating);
+        updateData.rating = rating;
+      }
+
+      try {
+        const db = router.db.getState();
+        const podcastIndex = db.podcasts.findIndex((p) => p.id === id);
+
+        if (podcastIndex === -1) {
+          console.log(`Podcast with id ${id} not found for update`);
+          return res.status(404).json({ error: "Podcast not found" });
+        }
+
+        const updatedPodcast = {
+          ...db.podcasts[podcastIndex],
+          ...updateData,
+          updatedAt: new Date().toISOString(),
+        };
+
+        db.podcasts[podcastIndex] = updatedPodcast;
+        router.db.setState(db);
+
+        console.log(
+          `Successfully updated podcast: ${updatedPodcast.title} (ID: ${id})`
+        );
+
+        const { pin, ...responseData } = updatedPodcast;
+        return res.status(200).json(responseData);
+      } catch (error) {
+        console.error("Update error:", error);
+        return res.status(500).json({
+          error: "Failed to update podcast",
+          details: NODE_ENV === "production" ? undefined : error.message,
+        });
+      }
+    }
+
+    if (req.method === "POST") {
+      const { pin, ...podcastData } = req.body;
+
+      if (podcastData.url) {
+        const urlValidation = validateUrl(podcastData.url);
+        if (!urlValidation.valid) {
+          return res.status(400).json(urlValidation);
+        }
+      }
+
+      const requiredFields = ["title", "host", "url", "category"];
+      const missingFields = requiredFields.filter(
+        (field) => !podcastData[field]
+      );
+
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          error: "Missing required fields",
+          details: `Please provide: ${missingFields.join(", ")}, pin`,
+          missingFields,
+        });
+      }
+
+      const pinValidation = validatePin(pin);
+      if (!pinValidation.valid) {
+        return res
+          .status(
+            pinValidation.error === "Invalid PIN for this podcast" ? 403 : 400
+          )
+          .json(pinValidation);
+      }
+
+      if (podcastData.rating !== undefined) {
+        const rating = Number(podcastData.rating);
+        podcastData.rating = rating;
+      }
+
+      try {
+        const db = router.db.getState();
+        const newId = Date.now().toString();
+        const newPodcast = {
+          id: newId,
+          ...podcastData,
+          pin: pin === ADMIN_PIN ? undefined : pin,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        db.podcasts.push(newPodcast);
+        router.db.setState(db);
+
+        console.log(
+          `Successfully created podcast: ${newPodcast.title} (ID: ${newId})`
+        );
+
+        const { pin: _, ...responseData } = newPodcast;
+        return res.status(201).json(responseData);
+      } catch (error) {
+        console.error("Create error:", error);
+        return res.status(500).json({
+          error: "Failed to create podcast",
+          details: NODE_ENV === "production" ? undefined : error.message,
+        });
+      }
+    }
+
+    if (req.method === "PUT") {
       if (req.body.url) {
         const urlValidation = validateUrl(req.body.url);
         if (!urlValidation.valid) {
@@ -123,25 +300,18 @@ server.use((req, res, next) => {
         }
       }
 
-      if (["POST", "PUT"].includes(req.method)) {
-        const requiredFields = ["title", "host", "url", "category", "pin"];
-        const missingFields = requiredFields.filter(
-          (field) => !req.body[field]
-        );
+      const requiredFields = ["title", "host", "url", "category", "pin"];
+      const missingFields = requiredFields.filter((field) => !req.body[field]);
 
-        if (missingFields.length > 0) {
-          return res.status(400).json({
-            error: "Missing required fields",
-            details: `Please provide: ${missingFields.join(", ")}`,
-            missingFields,
-          });
-        }
+      if (missingFields.length > 0) {
+        return res.status(400).json({
+          error: "Missing required fields",
+          details: `Please provide: ${missingFields.join(", ")}`,
+          missingFields,
+        });
       }
 
-      const pinValidation = validatePin(
-        req.body.pin,
-        ["PUT", "PATCH"].includes(req.method) ? req.url.split("/").pop() : null
-      );
+      const pinValidation = validatePin(req.body.pin);
       if (!pinValidation.valid) {
         return res
           .status(
@@ -155,24 +325,8 @@ server.use((req, res, next) => {
       }
     }
 
-    if (req.method === "PATCH") {
-      const updateFields = Object.keys(req.body).filter((key) => key !== "pin");
-      if (updateFields.length === 0) {
-        return res.status(400).json({
-          error: "No fields to update",
-          details: "Provide at least one field to update besides PIN",
-        });
-      }
-    }
-
-    if (req.body.rating !== undefined) {
+    if (req.method === "PUT" && req.body.rating !== undefined) {
       const rating = Number(req.body.rating);
-      if (isNaN(rating) || rating < 0 || rating > 5) {
-        return res.status(400).json({
-          error: "Invalid rating",
-          details: "Rating must be a number between 0 and 5",
-        });
-      }
       req.body.rating = rating;
     }
 
@@ -246,12 +400,15 @@ server.use((err, req, res, next) => {
   });
 });
 
-//NODE_ENV === "production"
-//?
+// Export for Vercel deployment
 module.exports = server;
-//: server.listen(PORT, () => {
-//  console.log(`JSON Server is running on http://localhost:${PORT}`);
-//  console.log(
-//    `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
-//  );
-// });
+
+// Start server locally if not in production
+if (NODE_ENV !== "production") {
+  server.listen(PORT, () => {
+    console.log(`JSON Server is running on http://localhost:${PORT}`);
+    console.log(
+      `Allowed podcast domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`
+    );
+  });
+}
