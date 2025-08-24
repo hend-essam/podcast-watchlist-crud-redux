@@ -2,7 +2,14 @@ import { useState } from "react";
 import { useAppDispatch } from "../store/hooks";
 import { openPodcastDetails } from "../store/modalSlice";
 import { getSinglePodcast } from "../store/podcastSlice";
-import { PodcastCardProps } from "../../types";
+import { Podcast } from "../../types";
+
+interface PodcastCardProps {
+  id: string;
+  title: string;
+  host: string;
+  category: string;
+}
 
 const getDirection = (text: string) => {
   const arabicPattern = /[\u0600-\u06FF]/;
@@ -16,12 +23,8 @@ const PodcastCard = ({ id, title, host, category }: PodcastCardProps) => {
   const handleViewDetails = async () => {
     setError(null);
     try {
-      const result = await dispatch(getSinglePodcast(id));
-      if (getSinglePodcast.fulfilled.match(result)) {
-        dispatch(openPodcastDetails(result.payload));
-      } else {
-        setError("Failed to fetch podcast details");
-      }
+      const result = await dispatch(getSinglePodcast(id)).unwrap(); // Use unwrap to handle promise
+      dispatch(openPodcastDetails(result as Podcast)); // result is guaranteed to be Podcast
     } catch (error) {
       console.error("Failed to fetch podcast details:", error);
       setError("Failed to fetch podcast details. Please try again.");

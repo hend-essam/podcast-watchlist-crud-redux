@@ -9,8 +9,7 @@ import { usePodcastDetails } from "./usePodcastDetails";
 
 const PodcastDetails = () => {
   const dispatch = useAppDispatch();
-  const { data: podcast } = useAppSelector((state) => state.modal);
-  
+  const podcast = useAppSelector((state) => state.podcast.singlePodcast);
   const {
     openEdit,
     openDelete,
@@ -40,7 +39,7 @@ const PodcastDetails = () => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-green-700 max-h-[70vh] overflow-y-auto pr-2">
         <PodcastInfo podcast={podcast} />
-        
+
         <ActionButtons
           onEdit={() => {
             setOpenEdit(!openEdit);

@@ -3,7 +3,10 @@ import { useAppDispatch } from "../../store/hooks";
 import { closeModal } from "../../store/modalSlice";
 import { deletePodcastByPin, updatePodcast } from "../../store/podcastSlice";
 import { Podcast } from "../../../types";
-import { ALLOWED_PODCAST_DOMAINS, VALIDATION_MESSAGES } from "../../constants";
+import {
+  ALLOWED_PODCAST_DOMAINS,
+  VALIDATION_MESSAGES,
+} from "../../../../constants";
 
 export const usePodcastDetails = (podcast: Podcast | null) => {
   const dispatch = useAppDispatch();
@@ -19,7 +22,6 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
     rating: 0,
     url: "",
     description: "",
-    updatedAt: new Date().toISOString(),
   });
 
   useEffect(() => {
@@ -31,7 +33,6 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
         rating: podcast.rating,
         url: podcast.url,
         description: podcast.description,
-        updatedAt: new Date().toISOString(),
       });
       validateUrl(podcast.url);
     }
@@ -69,15 +70,15 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
       setError(VALIDATION_MESSAGES.PIN_REQUIRED);
       return;
     }
-    if (pin.length < 4) {
-      setError(VALIDATION_MESSAGES.PIN_TOO_SHORT);
+    if (pin.length !== 4) {
+      setError("PIN must be exactly 4 digits");
       return;
     }
 
     if (!podcast) return;
 
     try {
-      await dispatch(deletePodcastByPin({ id: podcast.id, pin })).unwrap();
+      await dispatch(deletePodcastByPin({ id: podcast._id, pin })).unwrap();
       setTimeout(() => dispatch(closeModal()), 500);
     } catch (err) {
       setError(VALIDATION_MESSAGES.INVALID_PIN);
@@ -90,8 +91,8 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
       setError(VALIDATION_MESSAGES.PIN_REQUIRED);
       return;
     }
-    if (pin.length < 4) {
-      setError(VALIDATION_MESSAGES.PIN_TOO_SHORT);
+    if (pin.length !== 4) {
+      setError("PIN must be exactly 4 digits");
       return;
     }
     if (!validateUrl(editData.url || "")) {
@@ -102,7 +103,7 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
 
     try {
       await dispatch(
-        updatePodcast({ id: podcast.id, data: editData, pin })
+        updatePodcast({ id: podcast._id, data: editData, pin })
       ).unwrap();
       setError("");
       setTimeout(() => {

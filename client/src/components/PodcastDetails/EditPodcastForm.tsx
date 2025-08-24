@@ -1,7 +1,7 @@
 import { Podcast } from "../../../types";
-import { ALLOWED_PODCAST_DOMAINS, categories } from "../../constants";
+import { ALLOWED_PODCAST_DOMAINS, CATEGORIES } from "../../../../constants";
 import StarRating from "../StarRating";
-import { VALIDATION_MESSAGES } from "../../constants";
+import { VALIDATION_MESSAGES } from "../../../../constants";
 
 interface EditPodcastFormProps {
   editData: Partial<Podcast>;
@@ -58,7 +58,7 @@ const EditPodcastForm = ({
       editData.host &&
       editData.url &&
       editData.category &&
-      pin.length >= 4
+      pin.length === 4
     );
   };
 
@@ -117,7 +117,7 @@ const EditPodcastForm = ({
             required
           >
             <option value="">Select a category</option>
-            {categories.map((category) => (
+            {CATEGORIES.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
@@ -181,11 +181,15 @@ const EditPodcastForm = ({
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          placeholder="Enter PIN to confirm changes"
+          maxLength={4}
+          placeholder="Enter 4-digit PIN to confirm changes"
           value={pin}
           onChange={(e) => {
-            setPin(e.target.value);
-            setError("");
+            const value = e.target.value;
+            if (value.length <= 4) {
+              setPin(value);
+              setError("");
+            }
           }}
           onKeyPress={(e) => {
             if (!/[0-9]/.test(e.key)) {

@@ -7,8 +7,8 @@ import StarRating from "./StarRating";
 import {
   ALLOWED_PODCAST_DOMAINS,
   VALIDATION_MESSAGES,
-  categories,
-} from "../constants";
+  CATEGORIES,
+} from "../../../constants";
 
 const AddPodcastForm = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +20,6 @@ const AddPodcastForm = () => {
     pin: "",
     rating: 0,
     description: "",
-    createdAt: new Date().toISOString(),
   });
   const [touched, setTouched] = useState({
     title: false,
@@ -66,8 +65,8 @@ const AddPodcastForm = () => {
       return false;
     }
 
-    if (pin.length < 4) {
-      setPinError(VALIDATION_MESSAGES.PIN_TOO_SHORT);
+    if (pin.length !== 4) {
+      setPinError(VALIDATION_MESSAGES.PIN_INVALID_LENGTH);
       return false;
     }
     setPinError("");
@@ -84,6 +83,10 @@ const AddPodcastForm = () => {
         ...prev,
         [name]: true,
       }));
+    }
+
+    if (name === "pin" && value.length > 4) {
+      return;
     }
 
     setFormData((prev) => ({
@@ -137,6 +140,7 @@ const AddPodcastForm = () => {
       formData.url &&
       formData.category &&
       formData.pin &&
+      formData.pin.length === 4 &&
       !pinError
     );
   };
@@ -161,10 +165,8 @@ const AddPodcastForm = () => {
             host: formData.host,
             url: formData.url,
             category: formData.category,
-            pin: formData.pin,
             rating: formData.rating,
             description: formData.description,
-            createdAt: formData.createdAt,
           },
           pin: formData.pin,
         })
@@ -239,7 +241,7 @@ const AddPodcastForm = () => {
             required
           >
             <option value="">Select a category</option>
-            {categories.map((category) => (
+            {CATEGORIES.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
@@ -278,25 +280,12 @@ const AddPodcastForm = () => {
             placeholder="https://example.com/podcast"
             required
           />
-
           {shouldShowUrlError() && (
             <p className="text-red-500 text-sm mt-1">{urlError}</p>
           )}
           <p className="text-xs text-gray-500 mt-1">
             Supported platforms: {ALLOWED_PODCAST_DOMAINS.join(", ")}
           </p>
-        </div>
-
-        <div className="md:col-span-2 break-words">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            className="w-full rounded-md border border-green-800 p-2"
-            rows={3}
-            placeholder="Add a description (optional)"
-          />
         </div>
 
         <div className="md:col-span-2 break-words">
@@ -313,12 +302,13 @@ const AddPodcastForm = () => {
                 e.preventDefault();
               }
             }}
+            maxLength={4}
             className={`w-full rounded-md border p-2 ${
               shouldShowError("pin") || pinError
                 ? "border-red-500"
                 : "border-green-800"
             }`}
-            placeholder="Enter PIN for future edits"
+            placeholder="Enter 4-digit PIN for future edits"
             required
           />
           {pinError && <p className="text-red-500 text-sm mt-1">{pinError}</p>}

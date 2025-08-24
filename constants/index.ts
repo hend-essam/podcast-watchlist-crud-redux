@@ -7,7 +7,7 @@ export const ALLOWED_PODCAST_DOMAINS = [
   "youtu.be",
 ] as const;
 
-export const categories = [
+export const CATEGORIES = [
   "News & Politics",
   "Business & Finance",
   "Technology",
@@ -29,12 +29,14 @@ export const categories = [
 
 export const VALIDATION_MESSAGES = {
   URL_REQUIRED: "URL is required",
-  INVALID_URL: "Please enter a valid URL (https://example.com)",
-  INVALID_DOMAIN: `Allowed domains: ${ALLOWED_PODCAST_DOMAINS.join(", ")}`,
-  PIN_REQUIRED: "Please enter PIN",
-  PIN_TOO_SHORT: "PIN must be at least 4 digits",
   TITLE_REQUIRED: "Title is required",
   HOST_REQUIRED: "Host is required",
   CATEGORY_REQUIRED: "Category is required",
-  INVALID_PIN: "Invalid PIN or operation failed",
+  INVALID_URL: "Invalid URL format. Please provide a valid HTTP/HTTPS URL",
+  INVALID_DOMAIN: `Unsupported podcast platform. Allowed domains: ${ALLOWED_PODCAST_DOMAINS.join(
+    ", "
+  )}`,
+  PIN_REQUIRED: "PIN is required",
+  PIN_INVALID_LENGTH: "PIN must be exactly 4 digits",
+  INVALID_PIN: "Invalid PIN",
 } as const;

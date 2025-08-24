@@ -16,30 +16,32 @@ const DeletePodcastForm = ({
   return (
     <div className="md:col-span-2 flex flex-col gap-4 p-4 bg-[#dac8a5] rounded-xl break-words">
       <div className="p-3 bg-red-100 border-l-4 border-red-600 text-red-700 rounded-r">
-        <p className="font-medium">
-          ⚠️ Warning: This action cannot be undone
-        </p>
+        <p className="font-medium">⚠️ Warning: This action cannot be undone</p>
         <p className="text-sm mt-1">
           All podcast data will be permanently deleted from your watchlist.
         </p>
       </div>
-      
+
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded text-red-600">
           <p className="text-sm">{error}</p>
         </div>
       )}
-      
+
       <div className="flex flex-col sm:flex-row gap-4">
         <input
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          placeholder="Enter PIN to confirm deletion"
+          maxLength={4}
+          placeholder="Enter 4-digit PIN to confirm deletion"
           value={pin}
           onChange={(e) => {
-            setPin(e.target.value);
-            setError("");
+            const value = e.target.value;
+            if (value.length <= 4) {
+              setPin(value);
+              setError("");
+            }
           }}
           onKeyPress={(e) => {
             if (!/[0-9]/.test(e.key)) {
@@ -51,9 +53,9 @@ const DeletePodcastForm = ({
         />
         <button
           onClick={onDelete}
-          disabled={!pin || pin.length < 4}
+          disabled={pin.length !== 4}
           className={`bg-red-600 hover:bg-red-700 h-10 text-white sm:w-[40%] rounded-3xl transition-colors ${
-            !pin || pin.length < 4 ? "opacity-50 cursor-not-allowed" : ""
+            pin.length !== 4 ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
           Delete Permanently

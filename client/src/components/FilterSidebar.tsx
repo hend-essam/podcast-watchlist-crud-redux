@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { filterPodcastsByCategory, clearFilters } from "../store/podcastSlice";
-import { categories } from "../constants";
+import { CATEGORIES } from "../../../constants";
 
 const FilterSidebar = () => {
   const dispatch = useAppDispatch();
@@ -79,7 +79,7 @@ const FilterSidebar = () => {
           )}
         </div>
         <div className="flex flex-col gap-1.5 max-h-[calc(100vh-80px)] overflow-y-auto">
-          {categories.map((category) => (
+          {CATEGORIES.map((category) => (
             <label
               key={category}
               className="flex items-center gap-2 cursor-pointer"

@@ -1,26 +1,26 @@
 import { PodcastState } from "../../types";
-import { useSelector } from "react-redux";
 import PodcastCard from "./PodcastCard";
 import ErrorMessage from "./ErrorMessage";
 import {
-  getPodcast,
+  getPodcasts,
   searchPodcasts,
   // filterPodcastsByCategory,
   //clearFilters,
 } from "../store/podcastSlice";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useEffect, useState } from "react";
 import SearchPodcasts from "./SearchPodcasts";
+import { openAddPodcast } from "../store/modalSlice";
 
 const PodcastList = () => {
   const dispatch = useAppDispatch();
   const { podcasts, searchResults, filteredPodcasts, activeFilters, error } =
-    useSelector((state: PodcastState) => state.podcast);
+    useAppSelector((state: { podcast: PodcastState }) => state.podcast);
 
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    dispatch(getPodcast());
+    dispatch(getPodcasts());
   }, [dispatch]);
 
   const handleSearch = (searchTerm: string) => {
@@ -91,16 +91,15 @@ const PodcastList = () => {
             )}
           </div>
         )} */}
-
         <div className="w-full flex-1/2 max-w-4xl backdrop-blur-lg bg-white/30 border-2 border-white/40 shadow-lg rounded-[40px] p-6 overflow-hidden">
-          {podcasts.length > 0 ? (
+          {podcasts.length > 0 && !error ? (
             <div className="h-full overflow-y-auto flex flex-col gap-4 custom-scrollbar">
               {displayedPodcasts.length >= 1 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {displayedPodcasts.map((podcast) => (
                     <PodcastCard
-                      key={podcast.id}
-                      id={podcast.id}
+                      key={podcast._id}
+                      id={podcast._id}
                       title={podcast.title}
                       host={podcast.host}
                       category={podcast.category}
@@ -119,8 +118,20 @@ const PodcastList = () => {
                 </div>
               )}
             </div>
+          ) : error ? (
+            <ErrorMessage error={error} />
           ) : (
-            <ErrorMessage error={error as string} />
+            <div className="flex flex-col gap-5 items-center justify-center h-full">
+              <p className="text-[#016630] text-[30px] font-extrabold">
+                There are no podcasts
+              </p>
+              <button
+                className="border-8 border-double border-[#016630] cursor-pointer rounded font-medium p-2 text-white bg-[#d89615]"
+                onClick={() => dispatch(openAddPodcast())}
+              >
+                Add podcast
+              </button>
+            </div>
           )}
         </div>
       </div>
