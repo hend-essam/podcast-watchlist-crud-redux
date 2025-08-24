@@ -3,10 +3,7 @@ import { useAppDispatch } from "../../store/hooks";
 import { closeModal } from "../../store/modalSlice";
 import { deletePodcastByPin, updatePodcast } from "../../store/podcastSlice";
 import { Podcast } from "../../../types";
-import {
-  ALLOWED_PODCAST_DOMAINS,
-  VALIDATION_MESSAGES,
-} from "../../../../constants";
+import { ALLOWED_PODCAST_DOMAINS, VALIDATION_MESSAGES } from "../../constants";
 
 export const usePodcastDetails = (podcast: Podcast | null) => {
   const dispatch = useAppDispatch();
@@ -82,6 +79,7 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
       setTimeout(() => dispatch(closeModal()), 500);
     } catch (err) {
       setError(VALIDATION_MESSAGES.INVALID_PIN);
+      console.error(err);
     }
   };
 
@@ -112,6 +110,7 @@ export const usePodcastDetails = (podcast: Podcast | null) => {
       }, 500);
     } catch (err) {
       setError(VALIDATION_MESSAGES.INVALID_PIN);
+      console.error(err);
     }
   };
 

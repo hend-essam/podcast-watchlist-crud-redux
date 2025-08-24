@@ -1,7 +1,10 @@
 import { Podcast } from "../../../types";
-import { ALLOWED_PODCAST_DOMAINS, CATEGORIES } from "../../../../constants";
+import {
+  ALLOWED_PODCAST_DOMAINS,
+  CATEGORIES,
+  VALIDATION_MESSAGES,
+} from "../../constants";
 import StarRating from "../StarRating";
-import { VALIDATION_MESSAGES } from "../../../../constants";
 
 interface EditPodcastFormProps {
   editData: Partial<Podcast>;

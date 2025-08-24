@@ -1,10 +1,9 @@
-const mongoose = require("mongoose"); // ADD THIS LINE
+const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const Podcast = require("../models/podcast");
 const AppError = require("../utils/AppError");
 const catchAsync = require("../utils/catchAsync");
-const { ALLOWED_PODCAST_DOMAINS } = require("../../constants");
-const { CATEGORIES } = require("../../constants");
+const { ALLOWED_PODCAST_DOMAINS, CATEGORIES } = require("../constants");
 
 const validateUrl = (url) => {
   try {
@@ -31,7 +30,6 @@ const validateUrl = (url) => {
   }
 };
 
-// Podcast validation rules
 exports.validatePodcast = [
   body("title")
     .notEmpty()

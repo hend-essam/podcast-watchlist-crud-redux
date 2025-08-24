@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, AnyAction } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Podcast, PodcastState } from "../../types";
-import { ALLOWED_PODCAST_DOMAINS } from "../../../constants";
+import { ALLOWED_PODCAST_DOMAINS } from "../constants";
 
 const API_URL = "http://localhost:3005/api/v1/podcasts";
 

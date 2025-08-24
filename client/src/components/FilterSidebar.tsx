@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { filterPodcastsByCategory, clearFilters } from "../store/podcastSlice";
-import { CATEGORIES } from "../../../constants";
+import { CATEGORIES } from "../constants";
 
 const FilterSidebar = () => {
   const dispatch = useAppDispatch();

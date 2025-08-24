@@ -8,7 +8,7 @@ import {
   ALLOWED_PODCAST_DOMAINS,
   VALIDATION_MESSAGES,
   CATEGORIES,
-} from "../../../constants";
+} from "../constants";
 
 const AddPodcastForm = () => {
   const dispatch = useAppDispatch();

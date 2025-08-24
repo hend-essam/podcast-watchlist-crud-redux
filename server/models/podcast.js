@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { CATEGORIES } = require("../../constants");
+const { CATEGORIES } = require("../constants");
 
 const podcastSchema = new mongoose.Schema({
   title: {
