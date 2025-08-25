@@ -12,19 +12,16 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-// In your app.js
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
       "http://localhost:5173",
       "https://podcast-watchlist-crud-redux-fronte.vercel.app",
-      "https://*.vercel.app",
     ];
-
-    // Allow requests with no origin (like mobile apps, curl, postman)
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log(`Blocked CORS request from origin: ${origin}`); // Log for debugging
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -39,7 +36,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options("/api/v1/podcasts", cors(corsOptions));
 
 app.use(helmet());
 app.use(mongoSanitize());

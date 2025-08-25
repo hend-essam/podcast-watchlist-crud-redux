@@ -59,3 +59,19 @@ module.exports = (err, req, res, next) => {
     sendErrorProd(error, res);
   }
 };
+
+module.exports = (err, req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://podcast-watchlist-crud-redux-fronte.vercel.app"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Something went wrong!";
+
+  res.status(statusCode).json({
+    status: "error",
+    message,
+  });
+};
