@@ -10,12 +10,30 @@ const globalErrorHandler = require("./controllers/errorController.js");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(hpp({ whitelist: ["category", "rating"] }));
 app.use(express.json({ limit: "10kb" }));
 app.use(cors());
 app.options("*", cors());
+
+app.use((req, res, next) => {
+  req.setTimeout(10000, () => {
+    if (!res.headersSent) {
+      res.status(504).json({ error: "Request timeout" });
+    }
+  });
+
+  res.setTimeout(10000, () => {
+    if (!res.headersSent) {
+      res.status(504).json({ error: "Response timeout" });
+    }
+  });
+
+  next();
+});
 
 const limiter = rateLimit({
   max: 100,

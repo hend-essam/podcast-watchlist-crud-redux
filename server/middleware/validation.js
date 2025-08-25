@@ -77,7 +77,7 @@ exports.validatePodcast = [
     .withMessage("PIN must be exactly 4 digits")
     .isNumeric()
     .withMessage("PIN must contain only numbers"),
-  // Check for validation errors
+
   catchAsync(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -92,17 +92,14 @@ exports.validatePodcast = [
   }),
 ];
 
-// PIN validation middleware
 exports.validatePin = catchAsync(async (req, res, next) => {
   const { pin } = req.body;
   const podcastId = req.params.id;
 
-  // Check if PIN is provided
   if (!pin) {
     return next(new AppError("PIN is required", 400));
   }
 
-  // Validate PIN format
   if (typeof pin !== "string") {
     return next(new AppError("PIN must be a string", 400));
   }
@@ -115,31 +112,26 @@ exports.validatePin = catchAsync(async (req, res, next) => {
     return next(new AppError("PIN must be exactly 4 digits", 400));
   }
 
-  // Validate podcast ID format
   if (!podcastId || !mongoose.Types.ObjectId.isValid(podcastId)) {
     return next(new AppError("Invalid podcast ID format", 400));
   }
 
-  // Find the podcast
   const podcast = await Podcast.findById(podcastId).select("+pin");
 
   if (!podcast) {
     return next(new AppError("Podcast not found", 404));
   }
 
-  // Check if PIN matches (using the instance method from the model)
   const isPinValid = await podcast.correctPin(pin, podcast.pin);
 
   if (!isPinValid && pin !== process.env.ADMIN_PIN) {
     return next(new AppError("Invalid PIN for this podcast", 403));
   }
 
-  // Attach podcast to request for use in controllers
   req.podcast = podcast;
   next();
 });
 
-// Optional: Middleware to validate podcast ID format
 exports.validatePodcastId = catchAsync(async (req, res, next) => {
   const podcastId = req.params.id;
 
@@ -150,7 +142,6 @@ exports.validatePodcastId = catchAsync(async (req, res, next) => {
   next();
 });
 
-// Optional: Middleware to check if user is admin (using ADMIN_PIN)
 exports.isAdmin = catchAsync(async (req, res, next) => {
   const { pin } = req.body;
 
