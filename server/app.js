@@ -42,6 +42,23 @@ const limiter = rateLimit({
 });
 
 app.use("/api", limiter);
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to Podcast Watchlist API!",
+    version: "1.0.0",
+    documentation: "Visit /api/v1/podcasts for API endpoints",
+    endpoints: {
+      getAllPodcasts: "GET /api/v1/podcasts",
+      createPodcast: "POST /api/v1/podcasts",
+      getPodcast: "GET /api/v1/podcasts/:id",
+      updatePodcast: "PATCH /api/v1/podcasts/:id",
+      deletePodcast: "DELETE /api/v1/podcasts/:id",
+    },
+  });
+});
+
 app.use("/api/v1/podcasts", podcastRoutes);
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
