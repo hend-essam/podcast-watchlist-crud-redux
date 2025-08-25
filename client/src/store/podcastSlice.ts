@@ -3,7 +3,8 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { Podcast, PodcastState } from "../../types";
 import { ALLOWED_PODCAST_DOMAINS } from "../constants";
 
-const API_URL = "http://localhost:3005/api/v1/podcasts";
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3005/api/v1/podcasts";
 
 const handleApiError = (error: unknown, rejectWithValue: Function): string => {
   if (error instanceof Error) {

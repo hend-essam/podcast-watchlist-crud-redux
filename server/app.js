@@ -12,12 +12,22 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://podcast-watchlist-crud-redux-fronte.vercel.app",
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(hpp({ whitelist: ["category", "rating"] }));
 app.use(express.json({ limit: "10kb" }));
-app.use(cors());
-app.options("*", cors());
 
 app.use((req, res, next) => {
   req.setTimeout(10000, () => {
@@ -48,14 +58,6 @@ app.get("/", (req, res) => {
     status: "success",
     message: "Welcome to Podcast Watchlist API!",
     version: "1.0.0",
-    documentation: "Visit /api/v1/podcasts for API endpoints",
-    endpoints: {
-      getAllPodcasts: "GET /api/v1/podcasts",
-      createPodcast: "POST /api/v1/podcasts",
-      getPodcast: "GET /api/v1/podcasts/:id",
-      updatePodcast: "PATCH /api/v1/podcasts/:id",
-      deletePodcast: "DELETE /api/v1/podcasts/:id",
-    },
   });
 });
 
