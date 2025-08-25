@@ -17,6 +17,8 @@ const corsOptions = {
     "http://localhost:5173",
     "https://podcast-watchlist-crud-redux-fronte.vercel.app",
   ],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
