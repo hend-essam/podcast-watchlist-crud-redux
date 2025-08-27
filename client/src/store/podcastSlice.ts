@@ -4,7 +4,7 @@ import { Podcast, PodcastState } from "../../types";
 import { ALLOWED_PODCAST_DOMAINS } from "../constants";
 
 const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:3005/api/v1/podcasts";
+  import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1/podcasts";
 
 const handleApiError = (error: unknown, rejectWithValue: Function): string => {
   if (error instanceof Error) {
@@ -57,7 +57,10 @@ const validatePodcastUrl = (
 };
 
 const fetchWithErrorHandling = async (url: string, options?: RequestInit) => {
-  const response = await fetch(url, options);
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
 
   if (!response.ok) {
     let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
@@ -128,6 +131,7 @@ export const createPodcast = createAsyncThunk(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, pin }),
+        credentials: "include",
       });
 
       const podcast = await response.json();
@@ -168,6 +172,7 @@ export const updatePodcast = createAsyncThunk(
           pin,
           rating: data.rating ? Number(data.rating) : undefined,
         }),
+        credentials: "include",
       });
 
       const podcast = await response.json();
@@ -194,6 +199,7 @@ export const deletePodcastByPin = createAsyncThunk(
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pin }),
+        credentials: "include",
       });
 
       try {
