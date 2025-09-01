@@ -23,8 +23,8 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error("CORS: Blocked origin:", origin);
-      callback(new AppError(`CORS blocked for origin: ${origin}`, 403));
+      console.warn("CORS: Blocked origin:", origin);
+      callback(null, false);
     }
   },
   credentials: true,
@@ -78,25 +78,26 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    req.get("origin") ||
-      "https://podcast-watchlist-crud-redux-fronte.vercel.app"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,POST,PUT,DELETE,PATCH,OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type,Authorization,X-Requested-With,Accept"
-  );
-  console.error("Error:", err.message);
-  res.status(err.status || 500).json({
-    status: "error",
-    message: err.message || "Something went wrong!",
-  });
+  const origin = req.get("origin");
+  const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:5173"];
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type,Authorization,X-Requested-With,Accept"
+    );
+    next();
+    /* console.error("Error:", err.message);
+    res.status(err.status || 500).json({
+      status: "error",
+      message: err.message || "Something went wrong!",
+    }); */
+  }
 });
 
 module.exports = app;
