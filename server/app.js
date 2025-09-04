@@ -13,7 +13,10 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:5173"];
+const allowedOrigins = [
+  "https://podcast-watchlist-crud-redux-frontend-kakn0wogg.vercel.app" ||
+    "http://localhost:5173",
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -81,7 +84,10 @@ app.all("*", (req, res, next) => {
 
 app.use((err, req, res, next) => {
   const origin = req.get("origin");
-  const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:5173"];
+  const allowedOrigins = [
+    "https://podcast-watchlist-crud-redux-frontend-kakn0wogg.vercel.app" ||
+      "http://localhost:5173",
+  ];
 
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
