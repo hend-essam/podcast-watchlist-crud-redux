@@ -13,18 +13,19 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:5173"];
+
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = [
-      process.env.FRONTEND_URL || "http://localhost:5173",
-      "https://podcast-watchlist-crud-redux-fronte.vercel.app",
-    ];
     console.log("CORS: Request Origin:", origin);
-    if (!origin || allowedOrigins.includes(origin)) {
+
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.warn("CORS: Blocked origin:", origin);
-      callback(null, false);
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
@@ -35,6 +36,7 @@ const corsOptions = {
     "X-Requested-With",
     "Accept",
   ],
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -80,6 +82,7 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
   const origin = req.get("origin");
   const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:5173"];
+
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -91,13 +94,13 @@ app.use((err, req, res, next) => {
       "Access-Control-Allow-Headers",
       "Content-Type,Authorization,X-Requested-With,Accept"
     );
-    next();
-    /* console.error("Error:", err.message);
-    res.status(err.status || 500).json({
-      status: "error",
-      message: err.message || "Something went wrong!",
-    }); */
   }
+
+  console.error("Error:", err.message);
+  res.status(err.status || 500).json({
+    status: "error",
+    message: err.message || "Something went wrong!",
+  });
 });
 
 module.exports = app;
