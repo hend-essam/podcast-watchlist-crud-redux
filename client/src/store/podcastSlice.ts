@@ -4,10 +4,7 @@ import { Podcast, PodcastState } from "../../types";
 import { ALLOWED_PODCAST_DOMAINS } from "../constants";
 
 const API_URL =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.PROD
-    ? "https://podcast-watchlist-crud-redux-backend-ozg9vzsjb.vercel.app/api/v1/podcasts"
-    : "http://localhost:3000/api/v1/podcasts");
+  import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1/podcasts";
 
 const handleApiError = (error: unknown, rejectWithValue: Function): string => {
   if (error instanceof Error) {
