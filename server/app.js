@@ -14,7 +14,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 const allowedOrigins = [
-  "https://podcast-watchlist-crud-redux-frontend-kakn0wogg.vercel.app" ||
+  "https://podcast-watchlist-crud-redux-frontend-fqkb1m1pb.vercel.app" ||
     "http://localhost:5173",
 ];
 
@@ -85,7 +85,7 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
   const origin = req.get("origin");
   const allowedOrigins = [
-    "https://podcast-watchlist-crud-redux-frontend-kakn0wogg.vercel.app" ||
+    "https://podcast-watchlist-crud-redux-frontend-fqkb1m1pb.vercel.app" ||
       "http://localhost:5173",
   ];
 
