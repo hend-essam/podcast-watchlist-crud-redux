@@ -38,7 +38,7 @@ const podcastSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    min: [1, "Rating must be above 1.0"],
+    min: [0, "Rating must be above 0"],
     max: [5, "Rating must be below 5.0"],
     set: (val) => Math.round(val * 10) / 10,
   },
