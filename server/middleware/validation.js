@@ -67,7 +67,7 @@ exports.validatePodcast = [
 
   body("rating")
     .optional()
-    .isFloat({ min: 1, max: 5 })
+    .isFloat({ min: 0, max: 5 })
     .withMessage("Rating must be between 1.0 and 5.0"),
 
   body("pin")
